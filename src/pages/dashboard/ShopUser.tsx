@@ -20,6 +20,7 @@ import {
   ArrowRight,
   Play
 } from 'lucide-react';
+
 const ShopPage = () => {
   // Thème (clair/sombre)
   const [theme, setTheme] = useState('light'); 
@@ -167,9 +168,13 @@ const ShopPage = () => {
                     <Badge variant={product.stock < 10 ? 'destructive' : 'default'}>{product.stock} en stock</Badge>
                   </div>
                   <p className="text-xl font-bold">{product.price} $ <span className="text-sm text-muted-foreground">({product.country})</span></p>
-                  <Button className="w-full gradient-primary">
-                    <ShoppingCart className="w-4 h-4 mr-2" /> Commander votre produit
-                  </Button>
+                  
+                  {/* <Link to="/shop/:productId" className='py-4'> */}
+                  <Link to="#" className='py-4'>
+                    <Button className="w-full gradient-primary">
+                      <ShoppingCart className="w-4 h-4 mr-2" /> Commander votre produit
+                    </Button> 
+                  </Link>
                 </CardContent>
               </Card>
             ))}

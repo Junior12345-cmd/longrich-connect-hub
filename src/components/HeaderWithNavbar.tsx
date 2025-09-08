@@ -23,7 +23,7 @@ const HeaderWithNavbar = () => {
     };
   const menuItems = [
     { name: 'Accueil', icon: Home, path: '/'},
-    { name: 'Boutiques', icon: Store, path: '/shops'},
+    { name: 'Boutiques', icon: Store, path: '/shop'},
     { name: 'Packs d’adhésion', icon: DollarSign, path: '/packs'},
     { name: 'Formations', icon: BookOpen, path: '#'},
     { name: 'Lives', icon: Video, path: '#'},

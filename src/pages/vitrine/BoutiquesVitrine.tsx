@@ -59,11 +59,19 @@ const BoutiquesVitrine = () => {
             </div>
           </div>
 
-          <Link to="/register">
-          <Button size="lg" className="gradient-primary text-lg px-8 py-4">
-            🚀 Lancer ma Boutique Maintenant
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button> </Link>
+          <div className="flex justify-center">
+            <Link to="/shops">
+              <Button 
+                size="lg" 
+                className="gradient-primary text-lg px-8 py-4 flex items-center gap-2"
+              >
+                🚀 Lancer ma boutique maintenant
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </Link>
+          </div>
+
+
         </div>
       </section>
 
