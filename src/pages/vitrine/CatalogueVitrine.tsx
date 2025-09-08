@@ -133,7 +133,7 @@ const CatalogueVitrine = () => {
       </section>
 
       {/* Search & Filters */}
-      <section className="py-8 bg-background border-b">
+      {/* <section className="py-8 bg-background border-b">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-1 max-w-md">
@@ -155,10 +155,10 @@ const CatalogueVitrine = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Products Catalog */}
-      <section className="py-12 bg-background">
+      {/* <section className="py-12 bg-background">
         <div className="container mx-auto px-4">
           <div className="space-y-8">
             <div className="text-center space-y-4">
@@ -212,7 +212,7 @@ const CatalogueVitrine = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Packs Section */}
       <section className="py-12 bg-muted/30">

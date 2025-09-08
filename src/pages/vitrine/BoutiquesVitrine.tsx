@@ -58,11 +58,12 @@ const BoutiquesVitrine = () => {
               <span>Support 24/7</span>
             </div>
           </div>
-          
+
+          <Link to="/register">
           <Button size="lg" className="gradient-primary text-lg px-8 py-4">
             🚀 Lancer ma Boutique Maintenant
             <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          </Button> </Link>
         </div>
       </section>
 
