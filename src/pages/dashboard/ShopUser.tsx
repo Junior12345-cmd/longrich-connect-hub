@@ -169,8 +169,7 @@ const ShopPage = () => {
                   </div>
                   <p className="text-xl font-bold">{product.price} $ <span className="text-sm text-muted-foreground">({product.country})</span></p>
                   
-                  {/* <Link to="/shop/:productId" className='py-4'> */}
-                  <Link to="#" className='py-4'>
+                  <Link to="/shop/:productId" className='py-4'>
                     <Button className="w-full gradient-primary">
                       <ShoppingCart className="w-4 h-4 mr-2" /> Commander votre produit
                     </Button> 
