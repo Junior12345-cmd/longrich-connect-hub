@@ -59,36 +59,18 @@ const FormationsVitrine = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/vitrine" className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
-            <span className="font-bold text-xl">Longrich Community</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Link to="/dashboard">
-              <Button variant="outline">Se connecter</Button>
-            </Link>
-            <Button className="gradient-primary">Rejoindre</Button>
-          </div>
-        </div>
-      </header>
 
       {/* Hero */}
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold">
-            <span className="gradient-primary bg-clip-text text-transparent">Formations & Lives</span>
-            <br />Marketplace
+            <span className="gradient-primary bg-clip-text text-dark">Marketplace de formations</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Développez vos compétences MLM avec nos formations certifiantes et événements live interactifs.
           </p>
           <Button size="lg" className="gradient-primary text-lg px-8 py-4">
-            🎁 Suivre une Formation Gratuite
+            🎁 Suivre une formation gratuite
           </Button>
         </div>
       </section>
@@ -97,7 +79,7 @@ const FormationsVitrine = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center space-y-8">
-            <h2 className="text-3xl font-bold">🔥 Formations Les Plus Suivies</h2>
+            <h2 className="text-3xl font-bold">🔥 Formations les plus suivies</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {popularCourses.map((course) => (
                 <Card key={course.id} className="gradient-card">
@@ -169,7 +151,7 @@ const FormationsVitrine = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 gradient-primary text-white">
+      <section className="py-20 gradient-primary text-dark">
         <div className="container mx-auto px-4 text-center space-y-8">
           <h2 className="text-3xl font-bold">🎁 Offre Spéciale Nouveaux Membres</h2>
           <p className="text-xl opacity-90">Votre première formation certifiante OFFERTE</p>
@@ -179,15 +161,6 @@ const FormationsVitrine = () => {
           </Button>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-muted/30 py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center text-sm text-muted-foreground">
-            © 2024 Longrich Community. Tous droits réservés.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

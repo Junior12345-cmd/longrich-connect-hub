@@ -19,25 +19,6 @@ import { Link } from 'react-router-dom';
 const LandingVitrine = () => {
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
-            <span className="font-bold text-xl">Longrich Community</span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Link to="/dashboard">
-              <Button variant="outline">Se connecter</Button>
-            </Link>
-            <Button className="gradient-primary">
-              Rejoindre
-            </Button>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
@@ -47,7 +28,7 @@ const LandingVitrine = () => {
           </Badge>
           
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-            <span className="gradient-primary bg-clip-text text-transparent">
+            <span className="gradient-primary bg-clip-text text-dark">
               Révolutionnez votre Business MLM
             </span>
             <br />
@@ -76,14 +57,16 @@ const LandingVitrine = () => {
               <div className="text-sm text-muted-foreground">Membres Actifs</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-secondary">500+</div>
+              <div className="text-3xl font-bold text-primary">500+</div>
               <div className="text-sm text-muted-foreground">Boutiques</div>
             </div>
-            <div className="text-3xl font-bold text-accent">50+</div>
-            <div className="text-sm text-muted-foreground">Formations</div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-primary">50+</div>
+              <div className="text-sm text-muted-foreground text-primary">Formations</div>
+            </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">15</div>
-              <div className="text-sm text-muted-foreground">Pays Africains</div>
+              <div className="text-sm text-primary">Pays Africains</div>
             </div>
           </div>
         </div>
@@ -123,8 +106,8 @@ const LandingVitrine = () => {
                 <div className="space-y-4">
                   <Card className="gradient-card p-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center">
-                        <Globe className="w-5 h-5 text-white" />
+                      <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent/80 from-accent to-accent/80 rounded-lg flex items-center justify-center">
+                        <Globe className="w-5 h-5 text-dark" />
                       </div>
                       <div>
                         <h4 className="font-semibold">Recherche Géolocalisée</h4>
@@ -135,8 +118,8 @@ const LandingVitrine = () => {
                   
                   <Card className="gradient-card p-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 gradient-secondary rounded-lg flex items-center justify-center">
-                        <Store className="w-5 h-5 text-white" />
+                      <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent/80 rounded-lg flex items-center justify-center">
+                        <Store className="w-5 h-5 text-dark" />
                       </div>
                       <div>
                         <h4 className="font-semibold">Boutique E-commerce</h4>
@@ -148,7 +131,7 @@ const LandingVitrine = () => {
                   <Card className="gradient-card p-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent/80 rounded-lg flex items-center justify-center">
-                        <BookOpen className="w-5 h-5 text-white" />
+                        <BookOpen className="w-5 h-5 text-dark" />
                       </div>
                       <div>
                         <h4 className="font-semibold">Formations + Lives</h4>
@@ -205,12 +188,12 @@ const LandingVitrine = () => {
                     Mes posts ont 10x plus d'engagement maintenant !"
                   </blockquote>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                       <span className="text-white font-semibold text-sm">PK</span>
                     </div>
                     <div>
-                      <div className="font-semibold text-sm">Pierre Kouassi</div>
-                      <div className="text-xs text-muted-foreground">Distributeur, Côte d'Ivoire</div>
+                      <div className="font-semibold text-sm text-primary">Pierre Kouassi</div>
+                      <div className="text-xs text-primary">Distributeur, Côte d'Ivoire</div>
                     </div>
                   </div>
                 </CardContent>
@@ -228,7 +211,7 @@ const LandingVitrine = () => {
                     mon réseau grâce aux événements et formations."
                   </blockquote>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                       <span className="text-white font-semibold text-sm">AT</span>
                     </div>
                     <div>
@@ -273,12 +256,12 @@ const LandingVitrine = () => {
       </section>
 
       {/* CTA Final */}
-      <section className="py-20 gradient-primary text-white">
+      <section className="py-20 gradient-primary">
         <div className="container mx-auto px-4 text-center space-y-8">
-          <h2 className="text-3xl md:text-4xl font-bold">
+          <h2 className="text-3xl md:text-4xl font-bold text-dark">
             Prêt à Révolutionner votre Business MLM ?
           </h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">
+          <p className="text-xl opacity-90 max-w-2xl mx-auto text-dark">
             Rejoignez plus de 10,000 entrepreneurs qui développent leur réseau 
             avec nos outils innovants.
           </p>
@@ -286,69 +269,12 @@ const LandingVitrine = () => {
             <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
               🚀 Commencer Maintenant
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-primary">
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-4 border-white hover:text-primary">
               📱 Demander une Démo
             </Button>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-muted/30 py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">L</span>
-                </div>
-                <span className="font-bold text-xl">Longrich Community</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                La plateforme communautaire qui révolutionne le MLM en Afrique.
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Produits</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/catalogue" className="block text-muted-foreground hover:text-primary">Catalogue</Link>
-                <Link to="/vitrine/boutiques" className="block text-muted-foreground hover:text-primary">Boutiques</Link>
-                <div className="text-muted-foreground">Packs d'adhésion</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Communauté</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/formations" className="block text-muted-foreground hover:text-primary">Formations</Link>
-                <Link to="/vitrine/communaute" className="block text-muted-foreground hover:text-primary">Réseau Social</Link>
-                <div className="text-muted-foreground">Événements</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Support</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/about" className="block text-muted-foreground hover:text-primary">À propos</Link>
-                <Link to="/vitrine/contact" className="block text-muted-foreground hover:text-primary">Contact</Link>
-                <div className="text-muted-foreground">FAQ</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <div className="text-sm text-muted-foreground">
-              © 2024 Longrich Community. Tous droits réservés.
-            </div>
-            <div className="flex space-x-4 text-sm">
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">RGPD</div>
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">CGU</div>
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">Confidentialité</div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

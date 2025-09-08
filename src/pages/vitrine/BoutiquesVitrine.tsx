@@ -19,25 +19,6 @@ import { Link } from 'react-router-dom';
 const BoutiquesVitrine = () => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/vitrine" className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
-            <span className="font-bold text-xl">Longrich Community</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Link to="/dashboard">
-              <Button variant="outline">Se connecter</Button>
-            </Link>
-            <Button className="gradient-primary">
-              Rejoindre
-            </Button>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
@@ -47,8 +28,8 @@ const BoutiquesVitrine = () => {
           </Badge>
           
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-            <span className="gradient-primary bg-clip-text text-transparent">
-              Créez votre Boutique
+            <span className="gradient-primary bg-clip-text text-dark">
+              Créez votre boutique
             </span>
             <br />
             en 5 Minutes
@@ -94,7 +75,7 @@ const BoutiquesVitrine = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                     <Palette className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold">Design Personnalisable</h3>
@@ -107,7 +88,7 @@ const BoutiquesVitrine = () => {
               
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-16 h-16 gradient-secondary rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                     <CreditCard className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold">Paiements Intégrés</h3>
@@ -120,7 +101,7 @@ const BoutiquesVitrine = () => {
               
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-accent to-accent/80 rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                     <BarChart3 className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold">Analytics Détaillées</h3>
@@ -146,7 +127,7 @@ const BoutiquesVitrine = () => {
               
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-secondary to-accent rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                     <Smartphone className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold">Mobile-First</h3>
@@ -174,98 +155,17 @@ const BoutiquesVitrine = () => {
         </div>
       </section>
 
-      {/* Demo Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-8">
-            <h2 className="text-3xl font-bold">Aperçu d'une Boutique Type</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Découvrez à quoi ressemble une boutique créée avec notre plateforme
-            </p>
-            
-            <Card className="max-w-4xl mx-auto gradient-card">
-              <CardHeader className="text-center">
-                <Badge className="w-fit mx-auto mb-4 bg-green-500 text-white">
-                  👆 CLIQUEZ POUR TESTER
-                </Badge>
-                <CardTitle className="text-2xl">Boutique de Marie Diallo</CardTitle>
-                <p className="text-muted-foreground">mariediallo-longrich.com</p>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 gradient-primary rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold">MD</span>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">Marie Diallo</h3>
-                        <p className="text-sm text-muted-foreground">📍 Dakar, Sénégal</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium">4.8/5</span>
-                      <span className="text-muted-foreground text-sm">(127 avis)</span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="p-4">
-                      <div className="text-center space-y-2">
-                        <div className="text-2xl">🧴</div>
-                        <h4 className="font-semibold text-sm">Shampoing Longrich</h4>
-                        <p className="text-primary font-bold">15,000 FCFA</p>
-                        <Button size="sm" className="w-full gradient-primary">
-                          Ajouter au panier
-                        </Button>
-                      </div>
-                    </Card>
-                    <Card className="p-4">
-                      <div className="text-center space-y-2">
-                        <div className="text-2xl">💊</div>
-                        <h4 className="font-semibold text-sm">Multivitamines</h4>
-                        <p className="text-primary font-bold">25,000 FCFA</p>
-                        <Button size="sm" className="w-full gradient-primary">
-                          Ajouter au panier
-                        </Button>
-                      </div>
-                    </Card>
-                    <Card className="p-4">
-                      <div className="text-center space-y-2">
-                        <div className="text-2xl">✨</div>
-                        <h4 className="font-semibold text-sm">Crème Anti-Âge</h4>
-                        <p className="text-primary font-bold">35,000 FCFA</p>
-                        <Button size="sm" className="w-full gradient-primary">
-                          Ajouter au panier
-                        </Button>
-                      </div>
-                    </Card>
-                  </div>
-                  
-                  <div className="text-center">
-                    <Button className="gradient-secondary">
-                      🔍 Visiter la Boutique Complète
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* Process Tutorial */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center space-y-8">
-            <h2 className="text-3xl font-bold">⏱️ Créer sa Boutique en 5 Étapes</h2>
+            <h2 className="text-3xl font-bold">⏱️ Créer sa boutique en 5 Étapes</h2>
             
             <div className="max-w-4xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                 <Card className="gradient-card text-center">
                   <CardContent className="p-6 space-y-4">
-                    <div className="w-12 h-12 gradient-primary rounded-full flex items-center justify-center mx-auto">
+                    <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                       <span className="text-white font-bold">1</span>
                     </div>
                     <h4 className="font-semibold">Template</h4>
@@ -276,7 +176,7 @@ const BoutiquesVitrine = () => {
                 
                 <Card className="gradient-card text-center">
                   <CardContent className="p-6 space-y-4">
-                    <div className="w-12 h-12 gradient-secondary rounded-full flex items-center justify-center mx-auto">
+                    <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                       <span className="text-white font-bold">2</span>
                     </div>
                     <h4 className="font-semibold">Personnaliser</h4>
@@ -287,7 +187,7 @@ const BoutiquesVitrine = () => {
                 
                 <Card className="gradient-card text-center">
                   <CardContent className="p-6 space-y-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-accent to-accent/80 rounded-full flex items-center justify-center mx-auto">
+                    <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                       <span className="text-white font-bold">3</span>
                     </div>
                     <h4 className="font-semibold">Produits</h4>
@@ -309,7 +209,7 @@ const BoutiquesVitrine = () => {
                 
                 <Card className="gradient-card text-center">
                   <CardContent className="p-6 space-y-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-secondary to-accent rounded-full flex items-center justify-center mx-auto">
+                    <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto">
                       <CheckCircle className="w-6 h-6 text-white" />
                     </div>
                     <h4 className="font-semibold">En ligne !</h4>
@@ -388,10 +288,10 @@ const BoutiquesVitrine = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 gradient-primary text-white">
+      <section className="py-20 gradient-primary text-dark">
         <div className="container mx-auto px-4 text-center space-y-8">
           <h2 className="text-3xl md:text-4xl font-bold">
-            Votre Boutique vous Attend !
+            Votre boutique vous attend !
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto">
             Rejoignez plus de 500 entrepreneurs qui vendent déjà 
@@ -402,69 +302,13 @@ const BoutiquesVitrine = () => {
               🚀 Lancer ma Boutique
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-primary">
-              📱 Demander une Démo
+            <Button size="lg" className="gradient-primary">
+                📱 Demander une Démo
             </Button>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-muted/30 py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <Link to="/vitrine" className="flex items-center space-x-2">
-                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">L</span>
-                </div>
-                <span className="font-bold text-xl">Longrich Community</span>
-              </Link>
-              <p className="text-sm text-muted-foreground">
-                La plateforme communautaire qui révolutionne le MLM en Afrique.
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Produits</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/catalogue" className="block text-muted-foreground hover:text-primary">Catalogue</Link>
-                <div className="text-muted-foreground">Boutiques</div>
-                <div className="text-muted-foreground">Packs d'adhésion</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Communauté</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/formations" className="block text-muted-foreground hover:text-primary">Formations</Link>
-                <Link to="/vitrine/communaute" className="block text-muted-foreground hover:text-primary">Réseau Social</Link>
-                <div className="text-muted-foreground">Événements</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Support</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/about" className="block text-muted-foreground hover:text-primary">À propos</Link>
-                <Link to="/vitrine/contact" className="block text-muted-foreground hover:text-primary">Contact</Link>
-                <div className="text-muted-foreground">FAQ</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <div className="text-sm text-muted-foreground">
-              © 2024 Longrich Community. Tous droits réservés.
-            </div>
-            <div className="flex space-x-4 text-sm">
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">RGPD</div>
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">CGU</div>
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">Confidentialité</div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   );
 };

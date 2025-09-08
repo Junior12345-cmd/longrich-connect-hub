@@ -114,31 +114,12 @@ const CatalogueVitrine = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/vitrine" className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
-            <span className="font-bold text-xl">Longrich Community</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Link to="/dashboard">
-              <Button variant="outline">Se connecter</Button>
-            </Link>
-            <Button className="gradient-primary">
-              Rejoindre
-            </Button>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="py-12 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-6">
           <h1 className="text-3xl md:text-5xl font-bold">
-            <span className="gradient-primary bg-clip-text text-transparent">
+            <span className="gradient-primary bg-clip-text text-primary">
               Catalogue Produits
             </span>
             <br />
@@ -332,8 +313,8 @@ const CatalogueVitrine = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-12 h-12 gradient-primary rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white font-bold">1</span>
+                  <div className="w-12 h-12 bg-gradient-to-r from-accent to-accent/80 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-dark font-bold">1</span>
                   </div>
                   <h4 className="font-semibold">Choisir son Pack</h4>
                   <p className="text-sm text-muted-foreground">
@@ -344,8 +325,8 @@ const CatalogueVitrine = () => {
               
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-12 h-12 gradient-secondary rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white font-bold">2</span>
+                  <div className="w-12 h-12 bg-gradient-to-r from-accent to-accent/80 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-dark font-bold">2</span>
                   </div>
                   <h4 className="font-semibold">Informations</h4>
                   <p className="text-sm text-muted-foreground">
@@ -357,7 +338,7 @@ const CatalogueVitrine = () => {
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-accent to-accent/80 rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white font-bold">3</span>
+                    <span className="text-dark font-bold">3</span>
                   </div>
                   <h4 className="font-semibold">Paiement</h4>
                   <p className="text-sm text-muted-foreground">
@@ -368,8 +349,8 @@ const CatalogueVitrine = () => {
               
               <Card className="gradient-card text-center">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary via-secondary to-accent rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white font-bold">4</span>
+                  <div className="w-12 h-12 bg-gradient-to-r from-accent to-accent/80 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-dark font-bold">4</span>
                   </div>
                   <h4 className="font-semibold">C'est parti !</h4>
                   <p className="text-sm text-muted-foreground">
@@ -383,7 +364,7 @@ const CatalogueVitrine = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 gradient-primary text-white">
+      <section className="py-12 gradient-primary text-dark">
         <div className="container mx-auto px-4 text-center space-y-6">
           <h2 className="text-3xl font-bold">
             Prêt à Commencer votre Aventure ?
@@ -396,69 +377,12 @@ const CatalogueVitrine = () => {
             <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
               🚀 Choisir mon Pack
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-primary">
+            <Button className="gradient-primary" variant="default"> 
               💬 Poser une Question
-            </Button>
+            </Button>            
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-muted/30 py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <Link to="/vitrine" className="flex items-center space-x-2">
-                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">L</span>
-                </div>
-                <span className="font-bold text-xl">Longrich Community</span>
-              </Link>
-              <p className="text-sm text-muted-foreground">
-                La plateforme communautaire qui révolutionne le MLM en Afrique.
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Produits</h4>
-              <div className="space-y-2 text-sm">
-                <div className="text-muted-foreground">Catalogue</div>
-                <Link to="/vitrine/boutiques" className="block text-muted-foreground hover:text-primary">Boutiques</Link>
-                <div className="text-muted-foreground">Packs d'adhésion</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Communauté</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/formations" className="block text-muted-foreground hover:text-primary">Formations</Link>
-                <Link to="/vitrine/communaute" className="block text-muted-foreground hover:text-primary">Réseau Social</Link>
-                <div className="text-muted-foreground">Événements</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-semibold">Support</h4>
-              <div className="space-y-2 text-sm">
-                <Link to="/vitrine/about" className="block text-muted-foreground hover:text-primary">À propos</Link>
-                <Link to="/vitrine/contact" className="block text-muted-foreground hover:text-primary">Contact</Link>
-                <div className="text-muted-foreground">FAQ</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <div className="text-sm text-muted-foreground">
-              © 2024 Longrich Community. Tous droits réservés.
-            </div>
-            <div className="flex space-x-4 text-sm">
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">RGPD</div>
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">CGU</div>
-              <div className="text-muted-foreground hover:text-primary cursor-pointer">Confidentialité</div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

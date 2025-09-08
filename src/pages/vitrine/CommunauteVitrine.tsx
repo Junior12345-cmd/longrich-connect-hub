@@ -8,19 +8,6 @@ import { Link } from 'react-router-dom';
 const CommunauteVitrine = () => {
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/vitrine" className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
-            <span className="font-bold text-xl">Longrich Community</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Button className="gradient-primary">Rejoindre</Button>
-          </div>
-        </div>
-      </header>
 
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-8">
