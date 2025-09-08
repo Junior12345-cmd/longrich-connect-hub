@@ -58,14 +58,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="gradient-hero text-white py-12 px-4">
+      <div className="gradient-hero text-dark py-12 px-4">
         <div className="container mx-auto text-center space-y-6">
           <h1 className="text-4xl lg:text-6xl font-bold">
             Plateforme Communautaire
             <br />
             <span className="text-yellow-200">Longrich</span>
           </h1>
-          <p className="text-xl lg:text-2xl text-white/90 max-w-3xl mx-auto">
+          <p className="text-xl lg:text-2xl max-w-3xl mx-auto text-dark">
             Votre hub complet pour le commerce, la formation et la communauté
           </p>
           
@@ -76,7 +76,7 @@ const Index = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 w-5 h-5" />
                 <Input
                   placeholder="Rechercher produits, stockistes, formations..."
-                  className="pl-12 bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12"
+                  className="pl-12 text-white placeholder:text-white/70 h-12 border-primary focus:border-primary focus:ring-0"
                 />
               </div>
               <Button size="lg" className="bg-white text-primary hover:bg-white/90">

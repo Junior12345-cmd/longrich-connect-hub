@@ -10,17 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'; // Ajout pour galerie
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'; 
 
 const SingleProductPage = () => {
   const { productId } = useParams();
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light'); // Persister thème
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState({});
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
-    document.body.className = theme; // Appliquer thème global
+    document.body.className = theme;
   }, [theme]);
 
   // Données mockées (remplacer par API pour temps réel)
@@ -30,8 +30,8 @@ const SingleProductPage = () => {
     category: 'Santé',
     price: 50,
     stock: 100,
-    image: '/placeholder.jpg',
-    images: ['/placeholder.jpg', '/placeholder2.jpg', '/placeholder3.jpg'],
+    image: 'https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait',
+    images: ['https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait', 'https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait', 'https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait'],
     desc: 'Un supplément santé naturel conçu pour renforcer votre bien-être quotidien. Idéal pour tous les âges.',
     country: 'Sénégal',
     variants: [
@@ -117,8 +117,7 @@ const SingleProductPage = () => {
 
           {/* Actions */}
           <div className="flex gap-2">
-            <Button className="flex-1 gradient-primary"><ShoppingCart className="mr-2" /> Ajouter au panier</Button>
-            <Button variant="outline"><Heart className="mr-2" /> Wishlist</Button>
+            <Button className="flex-1 gradient-primary"><ShoppingCart className="mr-2" /> Paiement maintenant</Button>
           </div>
 
           {/* Tabs */}
@@ -126,7 +125,6 @@ const SingleProductPage = () => {
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="description">Description</TabsTrigger>
               <TabsTrigger value="reviews">Avis</TabsTrigger>
-              <TabsTrigger value="suggestions">Suggestions</TabsTrigger>
             </TabsList>
             <TabsContent value="description" className="text-muted-foreground">{product.desc}</TabsContent>
             <TabsContent value="reviews">
@@ -150,15 +148,9 @@ const SingleProductPage = () => {
               ))}
               <Button variant="outline" className="w-full"><MessageCircle className="mr-2" /> Ajouter avis</Button>
             </TabsContent>
-            <TabsContent value="suggestions">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Suggestions dynamiques */}
-                <Card><CardContent>Produit similaire 1</CardContent></Card>
-                <Card><CardContent>Produit similaire 2</CardContent></Card>
-              </div>
-            </TabsContent>
           </Tabs>
         </div>
+
       </main>
 
     </div>

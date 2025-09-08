@@ -53,11 +53,11 @@ const HeaderWithNavbar = () => {
               </Link>
             </div>
           ))}
-          <Link to="/dashboard">
+          <Link to="/login">
             <Button variant="outline" className="ml-4">Se connecter</Button>
           </Link>
-          <Button className="gradient-primary">Rejoindre</Button>
-           
+          <Link to="/register"> <Button className="gradient-primary">Rejoindre</Button></Link>
+         
           <div className="mx-auto px-4 py-4 flex justify-end">
               <div className="flex items-center space-x-2">
                 <Button variant="ghost" onClick={toggleTheme} className="p-2">

@@ -12,7 +12,7 @@ const CommunauteVitrine = () => {
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold">
-            <span className="gradient-primary bg-clip-text text-transparent">Communauté</span>
+            <span className="gradient-primary bg-clip-text text-dark">Communauté</span>
             <br />d'Entrepreneurs
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -33,14 +33,14 @@ const CommunauteVitrine = () => {
             </Card>
             <Card className="gradient-card text-center">
               <CardContent className="p-6 space-y-4">
-                <Users className="w-12 h-12 mx-auto text-secondary" />
+                <Users className="w-12 h-12 mx-auto text-primary" />
                 <h3 className="text-xl font-semibold">Forum d'Entraide</h3>
                 <p className="text-muted-foreground">Partagez vos succès et obtenez des conseils</p>
               </CardContent>
             </Card>
             <Card className="gradient-card text-center">
               <CardContent className="p-6 space-y-4">
-                <TrendingUp className="w-12 h-12 mx-auto text-accent" />
+                <TrendingUp className="w-12 h-12 mx-auto text-primary" />
                 <h3 className="text-xl font-semibold">Networking</h3>
                 <p className="text-muted-foreground">Développez votre réseau professionnel</p>
               </CardContent>
@@ -49,7 +49,7 @@ const CommunauteVitrine = () => {
         </div>
       </section>
 
-      <section className="py-20 gradient-primary text-white">
+      <section className="py-20 gradient-primary text-dark">
         <div className="container mx-auto px-4 text-center space-y-8">
           <h2 className="text-3xl font-bold">Prêt à Rejoindre la Communauté ?</h2>
           <Button size="lg" variant="secondary" className="text-lg px-8 py-4">

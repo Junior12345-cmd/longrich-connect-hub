@@ -8,17 +8,28 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-
+import { 
+  Store, 
+  Palette,
+  BarChart3,
+  CreditCard,
+  Smartphone,
+  Clock,
+  CheckCircle,
+  Star,
+  ArrowRight,
+  Play
+} from 'lucide-react';
 const ShopPage = () => {
   // Thème (clair/sombre)
-  const [theme, setTheme] = useState('light'); // À persister via localStorage ou context
+  const [theme, setTheme] = useState('light'); 
 
   // Données mockées (remplacer par API)
   const [products, setProducts] = useState([
-    { id: 1, name: 'Produit A', category: 'Santé', price: 50, stock: 100, image: '/placeholder.jpg', desc: 'Description courte pour SEO.', country: 'Sénégal', variants: 2 },
-    { id: 2, name: 'Produit B', category: 'Beauté', price: 30, stock: 50, image: '/placeholder.jpg', desc: 'Produit de beauté premium.', country: 'Côte d\'Ivoire', variants: 1 },
-    { id: 3, name: 'Produit C', category: 'Santé', price: 75, stock: 5, image: '/placeholder.jpg', desc: 'Supplément santé.', country: 'Mali', variants: 3 },
-    { id: 4, name: 'Produit D', category: 'Maison', price: 20, stock: 200, image: '/placeholder.jpg', desc: 'Article ménager.', country: 'Sénégal', variants: 1 },
+    { id: 1, name: 'Produit A', category: 'Santé', price: 50, stock: 100, image: 'https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait', desc: 'Description courte pour SEO.', country: 'Sénégal', variants: 2 },
+    { id: 2, name: 'Produit B', category: 'Beauté', price: 30, stock: 50, image: 'https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait', desc: 'Produit de beauté premium.', country: 'Côte d\'Ivoire', variants: 1 },
+    { id: 3, name: 'Produit C', category: 'Santé', price: 75, stock: 5, image: 'https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait', desc: 'Supplément santé.', country: 'Mali', variants: 3 },
+    { id: 4, name: 'Produit D', category: 'Maison', price: 20, stock: 200, image: 'https://readdy.ai/api/search-image?query=African%20business%20network%20community%20people%20connecting%20trading%20products%20modern%20office%20environment%20professional%20networking%20diverse%20entrepreneurs%20working%20together%20digital%20commerce%20platform%20vibrant%20colors%20warm%20lighting&width=800&height=1200&seq=longrich-signup&orientation=portrait', desc: 'Article ménager.', country: 'Sénégal', variants: 1 },
     // Ajoutez plus pour tester pagination
   ]);
 
@@ -70,6 +81,48 @@ const ShopPage = () => {
   return (
     <div className={`min-h-screen bg-background ${theme === 'dark' ? 'dark' : ''}`}>
 
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
+        <div className="container mx-auto px-4 text-center space-y-8">
+          <Badge className="gradient-primary text-white px-4 py-1">
+            🏪 SOLUTION E-COMMERCE INTÉGRÉE
+          </Badge>
+          
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            <span className="gradient-primary bg-clip-text text-dark">
+              Visitez ma boutique
+            </span>
+            <br />
+            en 5 Minutes
+          </h1>
+          
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Boutique e-commerce professionnelle, paiements sécurisés, gestion automatique du stock 
+            et analytics détaillées. Tout ce qu'il faut pour vendre en ligne.
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto text-sm">
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>Templates pros</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>Paiements sécurisés</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>Gestion stock</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>Support 24/7</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
         {/* Sidebar Filtres (Accordion sur mobile) */}
@@ -86,15 +139,6 @@ const ShopPage = () => {
           <div className="hidden md:block space-y-6">
             {renderFilters()}
           </div>
-          {/* Aperçu Analytics (pour owner) */}
-          <Card className="mt-6">
-            <CardContent className="p-4 space-y-2">
-              <h3 className="font-semibold">Analytics Rapides</h3>
-              <p>Visiteurs : 150 (semaine)</p>
-              <p>Conversions : 12%</p>
-              <Link to="/analytics"><Button variant="outline" size="sm">Voir plus</Button></Link>
-            </CardContent>
-          </Card>
         </aside>
 
         {/* Products Section */}

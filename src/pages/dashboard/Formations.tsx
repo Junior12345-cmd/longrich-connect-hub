@@ -177,7 +177,7 @@ const Formations = () => {
         <h2 className="text-xl font-semibold">Formations recommandées</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredCourses.map((course) => (
-            <Card key={course.id} className="gradient-card hover:shadow-lg transition-smooth">
+            <Card key={course.id} className="gradient-card hover:shadow-lg shadow transition-smooth">
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div className="text-center">

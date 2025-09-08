@@ -226,35 +226,6 @@ const LandingVitrine = () => {
         </div>
       </section>
 
-      {/* News/Announcements */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-8">
-            <h2 className="text-3xl font-bold">📢 Actualités & Annonces</h2>
-            
-            <Card className="max-w-2xl mx-auto gradient-card">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Badge className="bg-red-500 text-white px-2 py-1">🔥 NOUVEAU</Badge>
-                  <span className="font-semibold">Pack Ghana disponible - 50,000 GHS</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Badge className="bg-green-500 text-white px-2 py-1">📚 GRATUIT</Badge>
-                  <span className="font-semibold">Formation "Leadership MLM" ce weekend</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Badge className="bg-blue-500 text-white px-2 py-1">🎉 MILESTONE</Badge>
-                  <span className="font-semibold">+1000 nouveaux membres ce mois !</span>
-                </div>
-                <Button variant="outline" className="w-full">
-                  Voir toutes les actualités
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Final */}
       <section className="py-20 gradient-primary">
         <div className="container mx-auto px-4 text-center space-y-8">

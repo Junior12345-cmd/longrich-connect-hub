@@ -45,7 +45,7 @@ const LoginVitrine = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
           
@@ -94,14 +94,6 @@ const LoginVitrine = () => {
                 </p>
               </div>
             </div>
-
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                <strong>Note importante :</strong> Cette fonctionnalité nécessite l'intégration Supabase pour l'authentification. 
-                Connectez votre projet à Supabase via le bouton vert en haut à droite pour activer la connexion.
-              </AlertDescription>
-            </Alert>
           </div>
 
           {/* Right Side - Login Form */}
@@ -200,7 +192,7 @@ const LoginVitrine = () => {
                   </Button>
                 </form>
 
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <Separator />
@@ -229,12 +221,12 @@ const LoginVitrine = () => {
                       LinkedIn
                     </Button>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="text-center space-y-2">
                   <p className="text-sm text-muted-foreground">
                     Pas encore inscrit ?{' '}
-                    <Link to="/vitrine/register" className="text-primary hover:underline font-medium">
+                    <Link to="/register" className="text-primary hover:underline font-medium">
                       Créer un compte gratuit
                     </Link>
                   </p>
@@ -243,7 +235,7 @@ const LoginVitrine = () => {
                     <p className="text-xs text-muted-foreground mb-2">
                       Vous êtes un professionnel ?
                     </p>
-                    <Link to="/vitrine/register" className="text-sm text-primary hover:underline">
+                    <Link to="/packs" className="text-sm text-primary hover:underline">
                       Découvrir nos packs stockiste & distributeur →
                     </Link>
                   </div>

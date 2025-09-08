@@ -21,18 +21,18 @@ import {
 } from 'lucide-react';
 
 const navigationItems = [
-  { path: '/', icon: Home, label: 'Accueil' },
-  { path: '/search', icon: Search, label: 'Recherche' },
-  { path: '/boutiques', icon: Store, label: 'Boutiques' },
-  { path: '/packs', icon: Package, label: 'Packs d\'adhésion' },
-  { path: '/formations', icon: GraduationCap, label: 'Formations' },
-  { path: '/lives', icon: Video, label: 'Lives' },
-  { path: '/studio-ai', icon: Wand2, label: 'Studio IA' },
-  { path: '/communaute', icon: Users, label: 'Communauté' },
-  { path: '/messagerie', icon: MessageCircle, label: 'Messages', badge: 3 },
-  { path: '/plaintes', icon: AlertCircle, label: 'Support' },
-  { path: '/notifications', icon: Bell, label: 'Notifications', badge: 5 },
-  { path: '/paiements', icon: CreditCard, label: 'Paiements' },
+  { path: '/dashboard', icon: Home, label: 'Accueil' },
+  // { path: '/search', icon: Search, label: 'Recherche' },
+  { path: '/dash/boutiques', icon: Store, label: 'Boutiques' },
+  { path: '#', icon: Package, label: 'Packs d\'adhésion' },
+  { path: '/dash/formations', icon: GraduationCap, label: 'Formations' },
+  { path: '#', icon: Video, label: 'Lives' },
+  { path: '#', icon: Wand2, label: 'Studio IA', badge: "Nouveau" },
+  { path: '#', icon: Users, label: 'Communauté' },
+  { path: '/dash/messagerie', icon: MessageCircle, label: 'Messages', badge: 3 },
+  { path: '#', icon: AlertCircle, label: 'Support' },
+  { path: '#', icon: Bell, label: 'Notifications', badge: 5 },
+  { path: '#', icon: CreditCard, label: 'Paiements' },
 ];
 
 const Navigation = () => {

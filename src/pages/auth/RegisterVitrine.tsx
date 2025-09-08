@@ -83,7 +83,7 @@ const RegisterVitrine = () => {
   const strengthColors = ['bg-red-500', 'bg-red-400', 'bg-yellow-500', 'bg-green-500', 'bg-green-600'];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           
@@ -126,14 +126,6 @@ const RegisterVitrine = () => {
                 <div className="text-sm text-muted-foreground">Satisfaction</div>
               </div>
             </div>
-
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                <strong>Note importante :</strong> Cette fonctionnalité nécessite l'intégration Supabase pour l'authentification. 
-                Connectez votre projet à Supabase via le bouton vert en haut à droite pour activer l'inscription.
-              </AlertDescription>
-            </Alert>
           </div>
 
           {/* Right Side - Form */}
@@ -312,7 +304,7 @@ const RegisterVitrine = () => {
                   </Button>
                 </form>
 
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <Separator />
@@ -322,8 +314,7 @@ const RegisterVitrine = () => {
                         Ou continuer avec
                       </span>
                     </div>
-                  </div>
-
+                  </div> 
                   <div className="grid grid-cols-2 gap-4">
                     <Button variant="outline" className="w-full" disabled>
                       <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
@@ -340,12 +331,12 @@ const RegisterVitrine = () => {
                       </svg>
                       LinkedIn
                     </Button>
-                  </div>
-                </div>
+                  </div> 
+                </div>*/}
 
                 <div className="text-center text-sm text-muted-foreground">
                   Déjà membre ?{' '}
-                  <Link to="/vitrine/login" className="text-primary hover:underline font-medium">
+                  <Link to="/login" className="text-primary hover:underline font-medium">
                     Se connecter
                   </Link>
                 </div>

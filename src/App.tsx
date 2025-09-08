@@ -18,11 +18,14 @@ import LandingVitrine from "./pages/vitrine/LandingVitrine";
 import BoutiquesVitrine from "./pages/vitrine/BoutiquesVitrine";
 import CatalogueVitrine from "./pages/vitrine/CatalogueVitrine";
 import CommunauteVitrine from "./pages/vitrine/CommunauteVitrine";
-import FormationsVitrine from "./pages/vitrine/FormationsVitrine";
 import ShopUser from "./pages/dashboard/ShopUser";
 import SingleProductPage from "./pages/dashboard/SingleProductPage";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
+import FormationsListeVitrine from "./pages/vitrine/FormationsListeVitrine";
+import FormationDetailsVitrine from "./pages/vitrine/FormationDetailsVitrine";
+import LivesListeVitrine from "./pages/vitrine/LivesListeVitrine";
+import LiveDetailsVitrine from "./pages/vitrine/LiveDetailsVitrine";
+import LoginVitrine from "./pages/auth/LoginVitrine";
+import RegisterVitrine from "./pages/auth/RegisterVitrine";
 
 const queryClient = new QueryClient();
 
@@ -36,12 +39,13 @@ const App = () => (
           {/* Groupe avec Layout Dashboard */}
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Index />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/boutiques" element={<Boutiques />} />
-            <Route path="/formation" element={<Formations />} />
-            <Route path="/communaute" element={<Communaute />} />
-            <Route path="/messagerie" element={<Messagerie />} />
-            <Route path="/studio-ai" element={<StudioAI />} />
+            {/* <Route path="/search" element={<Search />} /> */}
+            <Route path="/dash/boutiques" element={<Boutiques />} />
+            <Route path="/dash/formations" element={<Formations />} />
+            {/* <Route path="/dash/live" element={<Formations />} /> */}
+            {/* <Route path="/dash/communauty" element={<Communaute />} /> */}
+            <Route path="/dash/messagerie" element={<Messagerie />} />
+            {/* <Route path="/dash/studio-ai" element={<StudioAI />} /> */}
           </Route>
 
           {/* Groupe sans Layout (pages vitrines, ex. About) */}
@@ -49,17 +53,19 @@ const App = () => (
             <Route path="/" element={<LandingVitrine />} />
             <Route path="/about" element={<About />} />
             <Route path="/shop" element={<BoutiquesVitrine />} />
+            <Route path="/shops" element={<ShopUser />} />
+            <Route path="/shop/:productId" element={<SingleProductPage />} />
             <Route path="/packs" element={<CatalogueVitrine />} />
             <Route path="/community" element={<CommunauteVitrine />} />
-            <Route path="/formations" element={<FormationsVitrine />} />
-            <Route path="/lives" element={<FormationsVitrine />} />
-            <Route path="/user-shop" element={<ShopUser />} />
-            <Route path="/shop/:productId" element={<SingleProductPage />} />
+            <Route path="/formations" element={<FormationsListeVitrine />} />
+            <Route path="/formation/:id" element={<FormationDetailsVitrine />} />
+            <Route path="/lives" element={<LivesListeVitrine />} />
+            <Route path="/live/:id" element={<LiveDetailsVitrine />} />
           </Route>
           {/* Catch-all global */}
           <Route path="*" element={<NotFound />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginVitrine />} />
+          <Route path="/register" element={<RegisterVitrine />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
