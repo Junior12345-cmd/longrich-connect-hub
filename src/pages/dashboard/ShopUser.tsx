@@ -100,13 +100,13 @@ const ShopPage = () => {
         {/* Products Section */}
         <section className="flex-1">
           {/* Recherche */}
-          <div className="mb-6">
+          <div className="mb-6 relative">
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 transform -translate-y-1/2" />
             <Input 
               placeholder="Rechercher un produit..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
-              prefix={<Search className="w-4 h-4 text-muted-foreground" />}
+              className="w-full pl-10"
             />
           </div>
 

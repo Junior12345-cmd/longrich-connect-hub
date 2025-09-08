@@ -1,0 +1,415 @@
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Calendar,
+  Clock,
+  Users,
+  Video,
+  Search,
+  Filter,
+  Play,
+  ArrowRight,
+  Zap,
+  Star,
+  Eye
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const LivesListeVitrine = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const upcomingLives = [
+    {
+      id: 1,
+      title: 'Techniques de Vente 2024',
+      description: 'Découvrez les dernières techniques de vente qui fonctionnent réellement dans le MLM moderne.',
+      instructor: {
+        name: 'Marie Diallo',
+        title: 'Expert Vente MLM',
+        avatar: '👩‍💼'
+      },
+      date: '2024-12-15',
+      time: '20:00',
+      timezone: 'GMT',
+      duration: '90 min',
+      participants: 45,
+      maxParticipants: 100,
+      price: 'GRATUIT',
+      category: 'Vente',
+      level: 'Intermédiaire',
+      image: '🎯',
+      status: 'upcoming',
+      tags: ['Live', 'Gratuit', 'Interactif']
+    },
+    {
+      id: 2,
+      title: 'Leadership d\'Équipe Performant',
+      description: 'Comment motiver et diriger une équipe MLM vers le succès.',
+      instructor: {
+        name: 'Jean Baptiste',
+        title: 'Team Leader Senior',
+        avatar: '👨‍💼'
+      },
+      date: '2024-12-20',
+      time: '19:00',
+      timezone: 'GMT',
+      duration: '120 min',
+      participants: 23,
+      maxParticipants: 50,
+      price: '5,000 FCFA',
+      category: 'Leadership',
+      level: 'Avancé',
+      image: '👥',
+      status: 'upcoming',
+      tags: ['Premium', 'Certification']
+    },
+    {
+      id: 3,
+      title: 'Marketing Digital pour Débutants',
+      description: 'Les bases du marketing digital appliquées au MLM.',
+      instructor: {
+        name: 'Sarah Johnson',
+        title: 'Digital Marketing Expert',
+        avatar: '👩‍🎓'
+      },
+      date: '2024-12-25',
+      time: '18:00',
+      timezone: 'GMT',
+      duration: '60 min',
+      participants: 67,
+      maxParticipants: 150,
+      price: 'GRATUIT',
+      category: 'Marketing',
+      level: 'Débutant',
+      image: '📈',
+      status: 'upcoming',
+      tags: ['Live', 'Gratuit', 'Débutant']
+    }
+  ];
+
+  const pastLives = [
+    {
+      id: 4,
+      title: 'Gestion Financière MLM',
+      description: 'Gérez efficacement vos finances dans le MLM.',
+      instructor: {
+        name: 'Pierre Kouassi',
+        title: 'Consultant Financier',
+        avatar: '👨‍💻'
+      },
+      date: '2024-12-01',
+      time: '20:00',
+      timezone: 'GMT',
+      duration: '90 min',
+      participants: 89,
+      maxParticipants: 100,
+      price: '10,000 FCFA',
+      category: 'Finance',
+      level: 'Intermédiaire',
+      image: '💰',
+      status: 'completed',
+      rating: 4.8,
+      views: 234,
+      tags: ['Replay', 'Premium']
+    },
+    {
+      id: 5,
+      title: 'Communication Persuasive',
+      description: 'Maîtrisez l\'art de la persuasion dans vos interactions.',
+      instructor: {
+        name: 'Fatou Sow',
+        title: 'Coach Communication',
+        avatar: '👩'
+      },
+      date: '2024-11-28',
+      time: '19:30',
+      timezone: 'GMT',
+      duration: '75 min',
+      participants: 156,
+      maxParticipants: 200,
+      price: 'GRATUIT',
+      category: 'Communication',
+      level: 'Débutant',
+      image: '🗣️',
+      status: 'completed',
+      rating: 4.9,
+      views: 445,
+      tags: ['Replay', 'Gratuit']
+    }
+  ];
+
+  const allLives = [...upcomingLives, ...pastLives];
+  
+  const filteredLives = allLives.filter(live => {
+    const matchesSearch = live.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         live.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || live.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  const categories = [...new Set(allLives.map(live => live.category))];
+
+  const getTimeUntilLive = (date: string, time: string) => {
+    const liveDateTime = new Date(`${date}T${time}:00Z`);
+    const now = new Date();
+    const diff = liveDateTime.getTime() - now.getTime();
+    
+    if (diff <= 0) return 'En cours';
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    
+    if (days > 0) return `Dans ${days} jour${days > 1 ? 's' : ''}`;
+    if (hours > 0) return `Dans ${hours}h`;
+    return 'Bientôt';
+  };
+
+  const LiveCard = ({ live }: { live: any }) => (
+    <Card className="gradient-card hover:shadow-xl transition-all duration-300">
+      <CardContent className="p-6 space-y-4">
+        <div className="flex justify-between items-start">
+          <div className="text-4xl">{live.image}</div>
+          <div className="flex gap-1">
+            {live.tags.map((tag, index) => (
+              <Badge 
+                key={index} 
+                variant={tag === 'Gratuit' ? 'secondary' : tag === 'Premium' ? 'default' : 'outline'}
+                className="text-xs"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <h3 className="font-semibold text-lg line-clamp-1">{live.title}</h3>
+          <p className="text-sm text-muted-foreground line-clamp-2">{live.description}</p>
+        </div>
+
+        <div className="flex items-center gap-3 text-sm">
+          <div className="text-2xl">{live.instructor.avatar}</div>
+          <div>
+            <div className="font-medium">{live.instructor.name}</div>
+            <div className="text-muted-foreground text-xs">{live.instructor.title}</div>
+          </div>
+        </div>
+
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              <span>{new Date(live.date).toLocaleDateString('fr-FR', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+              })}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span>{live.time} {live.timezone}</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              <span>{live.participants} inscrits</span>
+              {live.maxParticipants && (
+                <span className="text-muted-foreground">/ {live.maxParticipants}</span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <Video className="w-4 h-4" />
+              <span>{live.duration}</span>
+            </div>
+          </div>
+
+          {live.status === 'completed' && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <span>{live.rating}/5</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4" />
+                <span>{live.views} vues</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between pt-2">
+          <div className="space-y-1">
+            <div className="font-bold text-primary text-lg">{live.price}</div>
+            {live.status === 'upcoming' && (
+              <div className="text-xs text-muted-foreground">
+                {getTimeUntilLive(live.date, live.time)}
+              </div>
+            )}
+          </div>
+          
+          <Button asChild className="gradient-primary">
+            <Link to={`/vitrine/lives/${live.id}`}>
+              {live.status === 'upcoming' ? (
+                <>
+                  <Zap className="w-4 h-4 mr-2" />
+                  Réserver
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 mr-2" />
+                  Regarder
+                </>
+              )}
+            </Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
+        <div className="container mx-auto px-4 text-center space-y-8">
+          <h1 className="text-4xl md:text-6xl font-bold">
+            <span className="gradient-primary bg-clip-text text-dark">Lives & Webinaires</span>
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Participez à nos événements en direct et accédez aux replays de nos meilleurs webinaires MLM.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Badge variant="secondary" className="text-sm px-4 py-2">
+              <Video className="w-4 h-4 mr-2" />
+              Lives interactifs
+            </Badge>
+            <Badge variant="secondary" className="text-sm px-4 py-2">
+              <Users className="w-4 h-4 mr-2" />
+              Experts reconnus
+            </Badge>
+            <Badge variant="secondary" className="text-sm px-4 py-2">
+              <Play className="w-4 h-4 mr-2" />
+              Replays disponibles
+            </Badge>
+          </div>
+        </div>
+      </section>
+
+      {/* Filters Section */}
+      <section className="py-12 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-6 mb-8">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 transform -translate-y-1/2" />
+              <Input
+                placeholder="Rechercher un live ou webinaire..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            {/* Category Filter */}
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full lg:w-48">
+                <SelectValue placeholder="Catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Toutes les catégories</SelectItem>
+                {categories.map(category => (
+                  <SelectItem key={category} value={category}>{category}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Tabs */}
+          <Tabs defaultValue="upcoming" className="space-y-8">
+            <TabsList className="grid w-full grid-cols-2 lg:w-96 mx-auto">
+              <TabsTrigger value="upcoming" className="flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                Prochains Lives
+              </TabsTrigger>
+              <TabsTrigger value="past" className="flex items-center gap-2">
+                <Play className="w-4 h-4" />
+                Replays
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="upcoming" className="space-y-8">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-2">🔴 Prochains Lives</h2>
+                <p className="text-muted-foreground">
+                  {upcomingLives.filter(live => 
+                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                    (selectedCategory === 'all' || live.category === selectedCategory)
+                  ).length} événement{upcomingLives.length > 1 ? 's' : ''} à venir
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {upcomingLives
+                  .filter(live => 
+                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                    (selectedCategory === 'all' || live.category === selectedCategory)
+                  )
+                  .map((live) => (
+                    <LiveCard key={live.id} live={live} />
+                  ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="past" className="space-y-8">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-2">📺 Replays Disponibles</h2>
+                <p className="text-muted-foreground">
+                  {pastLives.filter(live => 
+                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                    (selectedCategory === 'all' || live.category === selectedCategory)
+                  ).length} replay{pastLives.length > 1 ? 's' : ''} disponible{pastLives.length > 1 ? 's' : ''}
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {pastLives
+                  .filter(live => 
+                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                    (selectedCategory === 'all' || live.category === selectedCategory)
+                  )
+                  .map((live) => (
+                    <LiveCard key={live.id} live={live} />
+                  ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 gradient-primary text-dark">
+        <div className="container mx-auto px-4 text-center space-y-8">
+          <h2 className="text-3xl font-bold">🎯 Ne manquez aucun événement</h2>
+          <p className="text-xl opacity-90 max-w-2xl mx-auto">
+            Créez votre compte pour être notifié des prochains lives et accéder aux replays exclusifs.
+          </p>
+          <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
+            Créer un compte gratuit
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default LivesListeVitrine;
