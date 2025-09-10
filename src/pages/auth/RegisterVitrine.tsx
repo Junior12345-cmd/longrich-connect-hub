@@ -53,12 +53,12 @@ const RegisterVitrine = () => {
     },
     {
       icon: <Users className="w-5 h-5 text-blue-500" />,
-      title: 'Rejoignez +5000 apprenants actifs',
+      title: 'Rejoignez +500 entrepreneurs actifs',
       description: 'Une communauté dynamique et bienveillante'
     },
     {
       icon: <Star className="w-5 h-5 text-yellow-500" />,
-      title: 'Certificats reconnus',
+      title: 'Ventes sécurisées',
       description: 'Valorisez vos compétences avec nos certifications'
     },
     {
@@ -100,7 +100,7 @@ const RegisterVitrine = () => {
 
             <div className="space-y-6">
               {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
+                <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-gray-100">
                   <div className="flex-shrink-0">
                     {benefit.icon}
                   </div>
@@ -114,7 +114,7 @@ const RegisterVitrine = () => {
 
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-4 rounded-lg bg-primary/5">
-                <div className="text-2xl font-bold text-primary">5000+</div>
+                <div className="text-2xl font-bold text-primary">500+</div>
                 <div className="text-sm text-muted-foreground">Membres actifs</div>
               </div>
               <div className="p-4 rounded-lg bg-primary/5">

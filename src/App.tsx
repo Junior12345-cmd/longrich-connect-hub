@@ -26,6 +26,7 @@ import LivesListeVitrine from "./pages/vitrine/LivesListeVitrine";
 import LiveDetailsVitrine from "./pages/vitrine/LiveDetailsVitrine";
 import LoginVitrine from "./pages/auth/LoginVitrine";
 import RegisterVitrine from "./pages/auth/RegisterVitrine";
+import SearchByProduct from "./pages/vitrine/SearchByProduct";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/shop" element={<BoutiquesVitrine />} />
             <Route path="/shops" element={<ShopUser />} />
             <Route path="/shop/:productId" element={<SingleProductPage />} />
+            <Route path="/search-by-product" element={<SearchByProduct />} />
             <Route path="/packs" element={<CatalogueVitrine />} />
             <Route path="/community" element={<CommunauteVitrine />} />
             <Route path="/formations" element={<FormationsListeVitrine />} />

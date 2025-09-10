@@ -101,9 +101,9 @@ const LoginVitrine = () => {
             <Card>
               <CardHeader className="text-center">
                 <div className="w-12 h-12 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <LogIn className="w-6 h-6 text-white" />
+                  <LogIn className="w-6 h-6 text-dark" />
                 </div>
-                <CardTitle className="text-2xl">Connexion</CardTitle>
+                <CardTitle className="text-2xl text-muted-foreground">Connexion</CardTitle>
                 <p className="text-muted-foreground">
                   Connectez-vous à votre espace membre
                 </p>
@@ -114,7 +114,7 @@ const LoginVitrine = () => {
                   
                   {/* Email */}
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email text-muted-foreground">Email</Label>
                     <div className="relative">
                       <Mail className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                       <Input
@@ -132,7 +132,7 @@ const LoginVitrine = () => {
                   {/* Password */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Mot de passe</Label>
+                      <Label htmlFor="password text-muted-foreground">Mot de passe</Label>
                       <Link 
                         to="/vitrine/forgot-password" 
                         className="text-sm text-primary hover:underline"

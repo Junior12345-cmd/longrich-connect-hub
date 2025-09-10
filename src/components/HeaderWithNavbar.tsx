@@ -8,7 +8,8 @@ import {
   Video, 
   Users, 
   DollarSign, 
-  Menu 
+  Menu, 
+  Search
 } from 'lucide-react';
 import { Moon, Sun } from 'lucide-react';
 
@@ -23,8 +24,9 @@ const HeaderWithNavbar = () => {
     };
   const menuItems = [
     { name: 'Accueil', icon: Home, path: '/'},
-    { name: 'Boutiques', icon: Store, path: '/shop'},
+    { name: 'Recherche un produit', icon: Search, path: '/search-by-product'},
     { name: 'Packs d’adhésion', icon: DollarSign, path: '/packs'},
+    { name: 'Boutiques', icon: Store, path: '/shop'},
     { name: 'Formations', icon: BookOpen, path: '#'},
     { name: 'Lives', icon: Video, path: '#'},
   ];

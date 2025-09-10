@@ -37,7 +37,7 @@ const LandingVitrine = () => {
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             E-commerce + Communauté + IA + Formation : Tout ce dont vous avez besoin 
-            pour développer votre réseau Longrich et maximiser vos revenus.
+            pour développer votre réseau MLM et maximiser vos revenus.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -161,7 +161,7 @@ const LandingVitrine = () => {
                     ))}
                   </div>
                   <blockquote className="text-sm italic">
-                    "Grâce à Longrich Community, j'ai multiplié mes ventes par 3 en 6 mois. 
+                    "Grâce à MLM Community, j'ai multiplié mes ventes par 3 en 6 mois. 
                     La plateforme est intuitive et le support excellent."
                   </blockquote>
                   <div className="flex items-center space-x-3">
@@ -238,10 +238,10 @@ const LandingVitrine = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
-              🚀 Commencer Maintenant
+              🚀 Commencer maintenant
             </Button>
             <Button size="lg" variant="secondary" className="text-lg px-8 py-4 border-white hover:text-primary">
-              📱 Demander une Démo
+              📱 Demander une démo
             </Button>
           </div>
         </div>
