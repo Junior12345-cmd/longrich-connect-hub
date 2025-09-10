@@ -16,13 +16,18 @@ import {
   ArrowRight,
   Zap,
   Star,
-  Eye
+  Eye,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const LivesListeVitrine = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentPageUpcoming, setCurrentPageUpcoming] = useState(1);
+  const [currentPagePast, setCurrentPagePast] = useState(1);
+  const itemsPerPage = 3;
 
   const upcomingLives = [
     {
@@ -68,6 +73,72 @@ const LivesListeVitrine = () => {
       image: '👥',
       status: 'upcoming',
       tags: ['Premium', 'Certification']
+    },
+    {
+      id: 3,
+      title: 'Marketing Digital pour Débutants',
+      description: 'Les bases du marketing digital appliquées au MLM.',
+      instructor: {
+        name: 'Sarah Johnson',
+        title: 'Digital Marketing Expert',
+        avatar: '👩‍🎓'
+      },
+      date: '2024-12-25',
+      time: '18:00',
+      timezone: 'GMT',
+      duration: '60 min',
+      participants: 67,
+      maxParticipants: 150,
+      price: 'GRATUIT',
+      category: 'Marketing',
+      level: 'Débutant',
+      image: '📈',
+      status: 'upcoming',
+      tags: ['Live', 'Gratuit', 'Débutant']
+    },
+    {
+      id: 3,
+      title: 'Marketing Digital pour Débutants',
+      description: 'Les bases du marketing digital appliquées au MLM.',
+      instructor: {
+        name: 'Sarah Johnson',
+        title: 'Digital Marketing Expert',
+        avatar: '👩‍🎓'
+      },
+      date: '2024-12-25',
+      time: '18:00',
+      timezone: 'GMT',
+      duration: '60 min',
+      participants: 67,
+      maxParticipants: 150,
+      price: 'GRATUIT',
+      category: 'Marketing',
+      level: 'Débutant',
+      image: '📈',
+      status: 'upcoming',
+      tags: ['Live', 'Gratuit', 'Débutant']
+    },
+    {
+      id: 3,
+      title: 'Marketing Digital pour Débutants',
+      description: 'Les bases du marketing digital appliquées au MLM.',
+      instructor: {
+        name: 'Sarah Johnson',
+        title: 'Digital Marketing Expert',
+        avatar: '👩‍🎓'
+      },
+      date: '2024-12-25',
+      time: '18:00',
+      timezone: 'GMT',
+      duration: '60 min',
+      participants: 67,
+      maxParticipants: 150,
+      price: 'GRATUIT',
+      category: 'Marketing',
+      level: 'Débutant',
+      image: '📈',
+      status: 'upcoming',
+      tags: ['Live', 'Gratuit', 'Débutant']
     },
     {
       id: 3,
@@ -146,13 +217,34 @@ const LivesListeVitrine = () => {
 
   const allLives = [...upcomingLives, ...pastLives];
   
-  const filteredLives = allLives.filter(live => {
+  const filteredUpcomingLives = upcomingLives.filter(live => {
     const matchesSearch = live.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          live.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || live.category === selectedCategory;
     
     return matchesSearch && matchesCategory;
   });
+
+  const filteredPastLives = pastLives.filter(live => {
+    const matchesSearch = live.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         live.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || live.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  const totalPagesUpcoming = Math.ceil(filteredUpcomingLives.length / itemsPerPage);
+  const totalPagesPast = Math.ceil(filteredPastLives.length / itemsPerPage);
+
+  const paginatedUpcomingLives = filteredUpcomingLives.slice(
+    (currentPageUpcoming - 1) * itemsPerPage,
+    currentPageUpcoming * itemsPerPage
+  );
+
+  const paginatedPastLives = filteredPastLives.slice(
+    (currentPagePast - 1) * itemsPerPage,
+    currentPagePast * itemsPerPage
+  );
 
   const categories = [...new Set(allLives.map(live => live.category))];
 
@@ -257,7 +349,7 @@ const LivesListeVitrine = () => {
           </div>
           
           <Button asChild className="gradient-primary">
-            <Link to={`/vitrine/lives/${live.id}`}>
+            <Link to={`/live/${live.id}`}>
               {live.status === 'upcoming' ? (
                 <>
                   <Zap className="w-4 h-4 mr-2" />
@@ -275,6 +367,14 @@ const LivesListeVitrine = () => {
       </CardContent>
     </Card>
   );
+
+  const handlePageChange = (tab: string, newPage: number) => {
+    if (tab === 'upcoming' && newPage >= 1 && newPage <= totalPagesUpcoming) {
+      setCurrentPageUpcoming(newPage);
+    } else if (tab === 'past' && newPage >= 1 && newPage <= totalPagesPast) {
+      setCurrentPagePast(newPage);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -350,46 +450,92 @@ const LivesListeVitrine = () => {
               <div className="text-center">
                 <h2 className="text-2xl font-bold mb-2">🔴 Prochains Lives</h2>
                 <p className="text-muted-foreground">
-                  {upcomingLives.filter(live => 
-                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                    (selectedCategory === 'all' || live.category === selectedCategory)
-                  ).length} événement{upcomingLives.length > 1 ? 's' : ''} à venir
+                  {filteredUpcomingLives.length} événement{filteredUpcomingLives.length > 1 ? 's' : ''} à venir
                 </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {upcomingLives
-                  .filter(live => 
-                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                    (selectedCategory === 'all' || live.category === selectedCategory)
-                  )
-                  .map((live) => (
-                    <LiveCard key={live.id} live={live} />
-                  ))}
+                {paginatedUpcomingLives.map((live) => (
+                  <LiveCard key={live.id} live={live} />
+                ))}
               </div>
+
+              {totalPagesUpcoming > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-8">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handlePageChange('upcoming', currentPageUpcoming - 1)}
+                    disabled={currentPageUpcoming === 1}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  {Array.from({ length: totalPagesUpcoming }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={currentPageUpcoming === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange('upcoming', page)}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handlePageChange('upcoming', currentPageUpcoming + 1)}
+                    disabled={currentPageUpcoming === totalPagesUpcoming}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="past" className="space-y-8">
               <div className="text-center">
                 <h2 className="text-2xl font-bold mb-2">📺 Replays Disponibles</h2>
                 <p className="text-muted-foreground">
-                  {pastLives.filter(live => 
-                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                    (selectedCategory === 'all' || live.category === selectedCategory)
-                  ).length} replay{pastLives.length > 1 ? 's' : ''} disponible{pastLives.length > 1 ? 's' : ''}
+                  {filteredPastLives.length} replay{filteredPastLives.length > 1 ? 's' : ''} disponible{filteredPastLives.length > 1 ? 's' : ''}
                 </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {pastLives
-                  .filter(live => 
-                    live.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                    (selectedCategory === 'all' || live.category === selectedCategory)
-                  )
-                  .map((live) => (
-                    <LiveCard key={live.id} live={live} />
-                  ))}
+                {paginatedPastLives.map((live) => (
+                  <LiveCard key={live.id} live={live} />
+                ))}
               </div>
+
+              {totalPagesPast > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-8">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handlePageChange('past', currentPagePast - 1)}
+                    disabled={currentPagePast === 1}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  {Array.from({ length: totalPagesPast }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={currentPagePast === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange('past', page)}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handlePageChange('past', currentPagePast + 1)}
+                    disabled={currentPagePast === totalPagesPast}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>

@@ -13,7 +13,9 @@ import {
   Search,
   Play,
   Award,
-  ArrowRight
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -21,6 +23,8 @@ const FormationsListeVitrine = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLevel, setSelectedLevel] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const formations = [
     {
@@ -49,7 +53,7 @@ const FormationsListeVitrine = () => {
       instructor: 'Pierre Kouassi',
       rating: 4.8,
       students: 892,
-      skills: ['Budgeting', 'Investissement', 'Fiscalité']
+      skills: ['Budgeting', 'Budget', 'Investissement', 'Fiscalité']
     },
     {
       id: 3,
@@ -106,6 +110,34 @@ const FormationsListeVitrine = () => {
       rating: 4.8,
       students: 445,
       skills: ['Prospection', 'Entretien', 'Onboarding']
+    },
+    {
+      id: 6,
+      title: 'Stratégies de Recrutement',
+      description: 'Apprenez à identifier, approcher et recruter les bons profils pour votre équipe.',
+      image: '🎪',
+      category: 'Recrutement',
+      level: 'Avancé',
+      duration: '3h 30min',
+      price: '30,000 FCFA',
+      instructor: 'Amadou Traoré',
+      rating: 4.8,
+      students: 445,
+      skills: ['Prospection', 'Entretien', 'Onboarding']
+    },
+    {
+      id: 6,
+      title: 'Stratégies de Recrutement',
+      description: 'Apprenez à identifier, approcher et recruter les bons profils pour votre équipe.',
+      image: '🎪',
+      category: 'Recrutement',
+      level: 'Avancé',
+      duration: '3h 30min',
+      price: '30,000 FCFA',
+      instructor: 'Amadou Traoré',
+      rating: 4.8,
+      students: 445,
+      skills: ['Prospection', 'Entretien', 'Onboarding']
     }
   ];
 
@@ -118,8 +150,20 @@ const FormationsListeVitrine = () => {
     return matchesSearch && matchesCategory && matchesLevel;
   });
 
+  const totalPages = Math.ceil(filteredFormations.length / itemsPerPage);
+  const paginatedFormations = filteredFormations.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const categories = [...new Set(formations.map(f => f.category))];
   const levels = [...new Set(formations.map(f => f.level))];
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -127,7 +171,7 @@ const FormationsListeVitrine = () => {
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold">
-            <span className="gradient-primary bg-clip-text text-dark">Formations Longrich</span>
+            <span className="gradient-primary bg-clip-text text-dark">Formations entrepreneuriales</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Apprenez les compétences de demain avec nos formations certifiantes et développez votre réussite MLM.
@@ -139,7 +183,7 @@ const FormationsListeVitrine = () => {
             </Badge>
             <Badge variant="secondary" className="text-sm px-4 py-2">
               <Users className="w-4 h-4 mr-2" />
-              5,000+ Apprenants actifs
+              500+ Apprenants actifs
             </Badge>
             <Badge variant="secondary" className="text-sm px-4 py-2">
               <Award className="w-4 h-4 mr-2" />
@@ -198,7 +242,7 @@ const FormationsListeVitrine = () => {
 
           {/* Formations Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredFormations.map((formation) => (
+            {paginatedFormations.map((formation) => (
               <Card key={formation.id} className="gradient-card hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6 space-y-4">
                   <div className="text-center">
@@ -214,24 +258,22 @@ const FormationsListeVitrine = () => {
                     <Badge variant="outline">{formation.level}</Badge>
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{formation.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span>{formation.rating}/5</span>
-                      </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      <span>{formation.duration}</span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        <span>{formation.students.toLocaleString()}</span>
-                      </div>
-                      <div className="font-bold text-primary">{formation.price}</div>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span>{formation.rating}/5</span>
                     </div>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      <span>{formation.students.toLocaleString()}</span>
+                    </div>
+                    <div className="font-bold text-primary">{formation.price}</div>
                   </div>
 
                   <div className="space-y-2">
@@ -246,7 +288,7 @@ const FormationsListeVitrine = () => {
                   </div>
 
                   <Button asChild className="w-full gradient-primary">
-                    <Link to={`/vitrine/formations/${formation.id}`}>
+                    <Link to={`/formation/${formation.id}`}>
                       Voir détails
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
@@ -255,6 +297,38 @@ const FormationsListeVitrine = () => {
               </Card>
             ))}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 

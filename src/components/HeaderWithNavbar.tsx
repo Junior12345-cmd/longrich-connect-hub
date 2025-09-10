@@ -27,8 +27,8 @@ const HeaderWithNavbar = () => {
     { name: 'Recherche un produit', icon: Search, path: '/search-by-product'},
     { name: 'Packs d’adhésion', icon: DollarSign, path: '/packs'},
     { name: 'Boutiques', icon: Store, path: '/shop'},
-    { name: 'Formations', icon: BookOpen, path: '#'},
-    { name: 'Lives', icon: Video, path: '#'},
+    { name: 'Formations', icon: BookOpen, path: '/formations'},
+    { name: 'Lives', icon: Video, path: '/lives'},
   ];
 
   return (
