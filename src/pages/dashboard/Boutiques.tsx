@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CreateShopForm } from '@/components/CreateShopForm';
+import { ProductsManagement } from '@/components/ProductsManagement';
+import { OrdersManagement } from '@/components/OrdersManagement';
 import { 
   Plus, 
   Store, 
@@ -16,6 +19,7 @@ import {
 
 const Boutiques = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [shops, setShops] = useState<any[]>([]);
 
   const stats = [
     {
@@ -65,10 +69,7 @@ const Boutiques = () => {
             Gérez votre boutique en ligne et développez votre activité
           </p>
         </div>
-        <Button className="gradient-primary">
-          <Plus className="w-4 h-4 mr-2" />
-          Créer une boutique
-        </Button>
+        <CreateShopForm onShopCreated={(shop) => setShops([...shops, shop])} />
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -158,44 +159,11 @@ const Boutiques = () => {
         </TabsContent>
 
         <TabsContent value="products" className="space-y-6">
-          <Card className="gradient-card">
-            <CardHeader>
-              <CardTitle>Gestion des Produits</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Gérez vos produits</h3>
-                <p className="text-muted-foreground mb-4">
-                  Ajoutez, modifiez et organisez votre catalogue produits
-                </p>
-                <Button className="gradient-secondary">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Ajouter un produit
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <ProductsManagement />
         </TabsContent>
 
         <TabsContent value="orders" className="space-y-6">
-          <Card className="gradient-card">
-            <CardHeader>
-              <CardTitle>Gestion des Commandes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <ShoppingCart className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Suivez vos commandes</h3>
-                <p className="text-muted-foreground mb-4">
-                  Gérez le cycle de vie de vos commandes clients
-                </p>
-                <Button className="gradient-accent">
-                  Voir toutes les commandes
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <OrdersManagement />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
