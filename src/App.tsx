@@ -13,6 +13,7 @@ import Communaute from "./pages/dashboard/Communaute";
 import Messagerie from "./pages/dashboard/Messagerie";
 import StudioAI from "./pages/dashboard/StudioAI";
 import NotFound from "./pages/dashboard/NotFound";
+import ImportProducts from "./pages/dashboard/ImportProducts";
 import About from "./pages/vitrine/About";
 import LandingVitrine from "./pages/vitrine/LandingVitrine";
 import BoutiquesVitrine from "./pages/vitrine/BoutiquesVitrine";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/dashboard" element={<Index />} />
             {/* <Route path="/search" element={<Search />} /> */}
             <Route path="/dash/boutiques" element={<Boutiques />} />
+            <Route path="/dash/import-products" element={<ImportProducts />} />
             <Route path="/dash/formations" element={<Formations />} />
             {/* <Route path="/dash/live" element={<Formations />} /> */}
             {/* <Route path="/dash/communauty" element={<Communaute />} /> */}

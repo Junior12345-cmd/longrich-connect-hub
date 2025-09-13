@@ -13,10 +13,13 @@ import {
   Package, 
   Eye,
   Star,
-  MoreHorizontal
+  MoreHorizontal,
+  Download
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const ProductsManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   
@@ -137,7 +140,17 @@ export const ProductsManagement = () => {
               <Package className="w-5 h-5" />
               Gestion des Produits
             </div>
-            <AddProductForm onProductAdded={handleAddProduct} />
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/dash/import-products')}
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Importer un produit
+              </Button>
+              <AddProductForm onProductAdded={handleAddProduct} />
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent>

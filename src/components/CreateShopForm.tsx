@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ShopTemplateSelector } from './ShopTemplateSelector';
 import { Plus, Store, Upload, CreditCard, Truck } from 'lucide-react';
 
 interface CreateShopFormProps {
@@ -24,7 +25,8 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
     category: '',
     paymentOnDelivery: true,
     paymentMethod: '',
-    isActive: false
+    isActive: false,
+    template: null
   });
 
   const categories = [
@@ -65,17 +67,23 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
       category: '',
       paymentOnDelivery: true,
       paymentMethod: '',
-      isActive: false
+      isActive: false,
+      template: null
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gradient-primary">
-          <Plus className="w-4 h-4 mr-2" />
-          Créer ma boutique
-        </Button>
+        <div className="flex gap-2">
+          <ShopTemplateSelector 
+            onTemplateSelected={(template) => setFormData({...formData, template})}
+          />
+          <Button className="gradient-primary">
+            <Plus className="w-4 h-4 mr-2" />
+            Créer ma boutique
+          </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
