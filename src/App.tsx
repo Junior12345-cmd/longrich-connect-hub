@@ -9,6 +9,8 @@ import Index from "./pages/dashboard/Index";
 import Search from "./pages/dashboard/Search";
 import Boutiques from "./pages/dashboard/Boutiques";
 import Formations from "./pages/dashboard/Formations";
+import FormationsManagement from "./pages/dashboard/FormationsManagement";
+import FormationPlayer from "./pages/dashboard/FormationPlayer";
 import Communaute from "./pages/dashboard/Communaute";
 import Messagerie from "./pages/dashboard/Messagerie";
 import StudioAI from "./pages/dashboard/StudioAI";
@@ -45,6 +47,8 @@ const App = () => (
             <Route path="/dash/boutiques" element={<Boutiques />} />
             <Route path="/dash/import-products" element={<ImportProducts />} />
             <Route path="/dash/formations" element={<Formations />} />
+            <Route path="/dash/formations-management" element={<FormationsManagement />} />
+            <Route path="/dash/formation-player/:id" element={<FormationPlayer />} />
             {/* <Route path="/dash/live" element={<Formations />} /> */}
             {/* <Route path="/dash/communauty" element={<Communaute />} /> */}
             <Route path="/dash/messagerie" element={<Messagerie />} />

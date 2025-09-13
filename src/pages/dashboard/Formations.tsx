@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 
 const Formations = () => {
+  const navigate = useNavigate();
   const myLearnings = [
     {
       id: 1,
@@ -82,10 +84,15 @@ const Formations = () => {
             Développez vos compétences et créez vos propres formations
           </p>
         </div>
-        <Button className="gradient-primary">
-          <Plus className="w-4 h-4 mr-2" />
-          Créer une formation
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => navigate('/dash/formations-management')}
+            className="gradient-secondary"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Gérer mes formations
+          </Button>
+        </div>
       </div>
 
       {/* My Learning Progress */}
