@@ -142,7 +142,7 @@ const PacksManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 container p-6 mx-auto">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Gestion des Packs d'Adhésion</h1>
