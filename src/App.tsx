@@ -11,6 +11,8 @@ import Boutiques from "./pages/dashboard/Boutiques";
 import Formations from "./pages/dashboard/Formations";
 import FormationsManagement from "./pages/dashboard/FormationsManagement";
 import FormationPlayer from "./pages/dashboard/FormationPlayer";
+import LivesManagement from "./pages/dashboard/LivesManagement";
+import PacksManagement from "./pages/dashboard/PacksManagement";
 import Communaute from "./pages/dashboard/Communaute";
 import Messagerie from "./pages/dashboard/Messagerie";
 import StudioAI from "./pages/dashboard/StudioAI";
@@ -49,7 +51,8 @@ const App = () => (
             <Route path="/dash/formations" element={<Formations />} />
             <Route path="/dash/formations-management" element={<FormationsManagement />} />
             <Route path="/dash/formation-player/:id" element={<FormationPlayer />} />
-            {/* <Route path="/dash/live" element={<Formations />} /> */}
+            <Route path="/dash/lives" element={<LivesManagement />} />
+            <Route path="/dash/packs" element={<PacksManagement />} />
             {/* <Route path="/dash/communauty" element={<Communaute />} /> */}
             <Route path="/dash/messagerie" element={<Messagerie />} />
             {/* <Route path="/dash/studio-ai" element={<StudioAI />} /> */}
