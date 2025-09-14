@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Search, 
   Filter,
@@ -11,12 +12,17 @@ import {
   Package,
   Users,
   ArrowRight,
-  Check
+  Check,
+  Plus
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CreatePackForm from '@/components/CreatePackForm';
 
 const CatalogueVitrine = () => {
   const [selectedCountry, setSelectedCountry] = useState('senegal');
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [customPacks, setCustomPacks] = useState<any[]>([]);
 
   const products = [
     {
@@ -65,51 +71,84 @@ const CatalogueVitrine = () => {
     }
   ];
 
-  const packs = {
+  const defaultPacks = {
     senegal: [
       {
+        id: 1,
         name: 'Pack Starter',
         price: '50,000 FCFA',
         pv: 100,
         products: 10,
         features: ['Formation de base incluse', 'Matériel marketing', 'Support 30 jours'],
-        popular: false
+        popular: false,
+        country: 'senegal'
       },
       {
+        id: 2,
         name: 'Pack Business',
         price: '150,000 FCFA',
         pv: 300,
         products: 30,
         features: ['Formation avancée', 'Boutique e-commerce', 'Support prioritaire', 'Bonus parrainage'],
-        popular: true
+        popular: true,
+        country: 'senegal'
       },
       {
+        id: 3,
         name: 'Pack VIP',
         price: '300,000 FCFA',
         pv: 600,
         products: 50,
         features: ['Formation complète', 'Coaching personnel', 'Événements exclusifs', 'Commission augmentée'],
-        popular: false
+        popular: false,
+        country: 'senegal'
       }
     ],
     mali: [
       {
+        id: 4,
         name: 'Pack Débutant',
         price: '45,000 CFA',
         pv: 100,
         products: 8,
         features: ['Formation de base', 'Kit marketing', 'Support WhatsApp'],
-        popular: false
+        popular: false,
+        country: 'mali'
       },
       {
+        id: 5,
         name: 'Pack Entrepreneur',
         price: '130,000 CFA',
         pv: 300,
         products: 25,
         features: ['Formation business', 'Boutique incluse', 'Mentorat', 'Outils IA basiques'],
-        popular: true
+        popular: true,
+        country: 'mali'
       }
     ]
+  };
+
+  // Combine default packs with custom packs
+  const allPacks = {
+    senegal: [...defaultPacks.senegal, ...customPacks.filter(p => p.country === 'senegal')],
+    mali: [...defaultPacks.mali, ...customPacks.filter(p => p.country === 'mali')],
+    burkina: [...customPacks.filter(p => p.country === 'burkina')],
+    'cote-ivoire': [...customPacks.filter(p => p.country === 'cote-ivoire')],
+    guinea: [...customPacks.filter(p => p.country === 'guinea')],
+    cameroun: [...customPacks.filter(p => p.country === 'cameroun')]
+  };
+
+  // Filter packs by search term
+  const getFilteredPacks = (countryPacks: any[]) => {
+    if (!searchTerm.trim()) return countryPacks;
+    return countryPacks.filter(pack => 
+      pack.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pack.features.some((feature: string) => feature.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  };
+
+  const handleCreatePack = (newPack: any) => {
+    setCustomPacks(prev => [...prev, newPack]);
   };
 
   return (
@@ -133,29 +172,43 @@ const CatalogueVitrine = () => {
       </section>
 
       {/* Search & Filters */}
-      {/* <section className="py-8 bg-background border-b">
+      <section className="py-8 bg-background border-b">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input 
-                placeholder="Rechercher un produit..." 
+                placeholder="Rechercher un pack..." 
                 className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex gap-2 flex-wrap">
-              <Button variant="outline" size="sm">
-                <Filter className="w-4 h-4 mr-2" />
-                Tous
+              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Filtrer par pays" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="senegal">🇸🇳 Sénégal</SelectItem>
+                  <SelectItem value="mali">🇲🇱 Mali</SelectItem>
+                  <SelectItem value="burkina">🇧🇫 Burkina Faso</SelectItem>
+                  <SelectItem value="cote-ivoire">🇨🇮 Côte d'Ivoire</SelectItem>
+                  <SelectItem value="guinea">🇬🇳 Guinée</SelectItem>
+                  <SelectItem value="cameroun">🇨🇲 Cameroun</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={() => setShowCreateForm(true)}
+                className="gradient-primary"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Ajouter un Pack
               </Button>
-              <Button variant="outline" size="sm">Santé</Button>
-              <Button variant="outline" size="sm">Beauté</Button>
-              <Button variant="outline" size="sm">Maison</Button>
-              <Button variant="outline" size="sm">En stock</Button>
             </div>
           </div>
         </div>
-      </section> */}
+      </section>
 
       {/* Products Catalog */}
       {/* <section className="py-12 bg-background">
@@ -227,7 +280,7 @@ const CatalogueVitrine = () => {
             
             {/* Country Selector */}
             <div className="flex justify-center">
-              <div className="flex gap-2 p-1 bg-muted rounded-lg">
+              <div className="flex gap-2 p-1 bg-muted rounded-lg flex-wrap">
                 <Button 
                   variant={selectedCountry === 'senegal' ? 'default' : 'ghost'}
                   size="sm"
@@ -244,15 +297,44 @@ const CatalogueVitrine = () => {
                 >
                   🇲🇱 Mali
                 </Button>
-                <Button variant="ghost" size="sm" disabled>
-                  + Autres pays
+                <Button 
+                  variant={selectedCountry === 'burkina' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedCountry('burkina')}
+                  className={selectedCountry === 'burkina' ? 'gradient-primary' : ''}
+                >
+                  🇧🇫 Burkina
+                </Button>
+                <Button 
+                  variant={selectedCountry === 'cote-ivoire' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedCountry('cote-ivoire')}
+                  className={selectedCountry === 'cote-ivoire' ? 'gradient-primary' : ''}
+                >
+                  🇨🇮 Côte d'Ivoire
+                </Button>
+                <Button 
+                  variant={selectedCountry === 'guinea' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedCountry('guinea')}
+                  className={selectedCountry === 'guinea' ? 'gradient-primary' : ''}
+                >
+                  🇬🇳 Guinée
+                </Button>
+                <Button 
+                  variant={selectedCountry === 'cameroun' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedCountry('cameroun')}
+                  className={selectedCountry === 'cameroun' ? 'gradient-primary' : ''}
+                >
+                  🇨🇲 Cameroun
                 </Button>
               </div>
             </div>
             
             {/* Packs Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {packs[selectedCountry as keyof typeof packs]?.map((pack, index) => (
+              {getFilteredPacks(allPacks[selectedCountry as keyof typeof allPacks] || []).map((pack, index) => (
                 <Card 
                   key={index} 
                   className={`gradient-card relative ${pack.popular ? 'ring-2 ring-primary' : ''}`}
@@ -383,6 +465,12 @@ const CatalogueVitrine = () => {
           </div>
         </div>
       </section>
+
+      <CreatePackForm 
+        open={showCreateForm} 
+        onClose={() => setShowCreateForm(false)}
+        onSubmit={handleCreatePack}
+      />
     </div>
   );
 };

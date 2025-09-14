@@ -18,9 +18,12 @@ import {
   Star,
   Eye,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Plus,
+  ExternalLink
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CreateLiveForm from '@/components/CreateLiveForm';
 
 const LivesListeVitrine = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,8 +31,13 @@ const LivesListeVitrine = () => {
   const [currentPageUpcoming, setCurrentPageUpcoming] = useState(1);
   const [currentPagePast, setCurrentPagePast] = useState(1);
   const itemsPerPage = 3;
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [lives, setLives] = useState({
+    upcoming: [] as any[],
+    past: [] as any[]
+  });
 
-  const upcomingLives = [
+  const defaultUpcomingLives = [
     {
       id: 1,
       title: 'Techniques de Vente 2024',
@@ -50,6 +58,8 @@ const LivesListeVitrine = () => {
       level: 'Intermédiaire',
       image: '🎯',
       status: 'upcoming',
+      meetingLink: 'https://zoom.us/j/123456789',
+      platform: 'zoom',
       tags: ['Live', 'Gratuit', 'Interactif']
     },
     {
@@ -72,6 +82,8 @@ const LivesListeVitrine = () => {
       level: 'Avancé',
       image: '👥',
       status: 'upcoming',
+      meetingLink: 'https://meet.google.com/abc-defg-hij',
+      platform: 'google-meet',
       tags: ['Premium', 'Certification']
     },
     {
@@ -94,77 +106,16 @@ const LivesListeVitrine = () => {
       level: 'Débutant',
       image: '📈',
       status: 'upcoming',
-      tags: ['Live', 'Gratuit', 'Débutant']
-    },
-    {
-      id: 3,
-      title: 'Marketing Digital pour Débutants',
-      description: 'Les bases du marketing digital appliquées au MLM.',
-      instructor: {
-        name: 'Sarah Johnson',
-        title: 'Digital Marketing Expert',
-        avatar: '👩‍🎓'
-      },
-      date: '2024-12-25',
-      time: '18:00',
-      timezone: 'GMT',
-      duration: '60 min',
-      participants: 67,
-      maxParticipants: 150,
-      price: 'GRATUIT',
-      category: 'Marketing',
-      level: 'Débutant',
-      image: '📈',
-      status: 'upcoming',
-      tags: ['Live', 'Gratuit', 'Débutant']
-    },
-    {
-      id: 3,
-      title: 'Marketing Digital pour Débutants',
-      description: 'Les bases du marketing digital appliquées au MLM.',
-      instructor: {
-        name: 'Sarah Johnson',
-        title: 'Digital Marketing Expert',
-        avatar: '👩‍🎓'
-      },
-      date: '2024-12-25',
-      time: '18:00',
-      timezone: 'GMT',
-      duration: '60 min',
-      participants: 67,
-      maxParticipants: 150,
-      price: 'GRATUIT',
-      category: 'Marketing',
-      level: 'Débutant',
-      image: '📈',
-      status: 'upcoming',
-      tags: ['Live', 'Gratuit', 'Débutant']
-    },
-    {
-      id: 3,
-      title: 'Marketing Digital pour Débutants',
-      description: 'Les bases du marketing digital appliquées au MLM.',
-      instructor: {
-        name: 'Sarah Johnson',
-        title: 'Digital Marketing Expert',
-        avatar: '👩‍🎓'
-      },
-      date: '2024-12-25',
-      time: '18:00',
-      timezone: 'GMT',
-      duration: '60 min',
-      participants: 67,
-      maxParticipants: 150,
-      price: 'GRATUIT',
-      category: 'Marketing',
-      level: 'Débutant',
-      image: '📈',
-      status: 'upcoming',
+      meetingLink: 'https://zoom.us/j/987654321',
+      platform: 'zoom',
       tags: ['Live', 'Gratuit', 'Débutant']
     }
   ];
 
-  const pastLives = [
+  // Combine default lives with custom lives
+  const upcomingLives = [...defaultUpcomingLives, ...lives.upcoming];
+
+  const defaultPastLives = [
     {
       id: 4,
       title: 'Gestion Financière MLM',
@@ -187,6 +138,8 @@ const LivesListeVitrine = () => {
       status: 'completed',
       rating: 4.8,
       views: 234,
+      meetingLink: 'https://youtube.com/watch?v=example',
+      platform: 'youtube',
       tags: ['Replay', 'Premium']
     },
     {
@@ -211,9 +164,14 @@ const LivesListeVitrine = () => {
       status: 'completed',
       rating: 4.9,
       views: 445,
+      meetingLink: 'https://youtube.com/watch?v=example2',
+      platform: 'youtube',
       tags: ['Replay', 'Gratuit']
     }
   ];
+
+  // Combine default lives with custom lives
+  const pastLives = [...defaultPastLives, ...lives.past];
 
   const allLives = [...upcomingLives, ...pastLives];
   
@@ -348,21 +306,34 @@ const LivesListeVitrine = () => {
             )}
           </div>
           
-          <Button asChild className="gradient-primary">
-            <Link to={`/live/${live.id}`}>
-              {live.status === 'upcoming' ? (
-                <>
-                  <Zap className="w-4 h-4 mr-2" />
-                  Réserver
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4 mr-2" />
-                  Regarder
-                </>
-              )}
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            {live.status === 'upcoming' && live.meetingLink && (
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => handleJoinLive(live)}
+                className="flex-1"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Rejoindre
+              </Button>
+            )}
+            <Button asChild className="gradient-primary flex-1">
+              <Link to={`/live/${live.id}`}>
+                {live.status === 'upcoming' ? (
+                  <>
+                    <Zap className="w-4 h-4 mr-2" />
+                    Détails
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4 mr-2" />
+                    Regarder
+                  </>
+                )}
+              </Link>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -373,6 +344,19 @@ const LivesListeVitrine = () => {
       setCurrentPageUpcoming(newPage);
     } else if (tab === 'past' && newPage >= 1 && newPage <= totalPagesPast) {
       setCurrentPagePast(newPage);
+    }
+  };
+
+  const handleCreateLive = (newLive: any) => {
+    setLives(prev => ({
+      ...prev,
+      upcoming: [...prev.upcoming, newLive]
+    }));
+  };
+
+  const handleJoinLive = (live: any) => {
+    if (live.meetingLink) {
+      window.open(live.meetingLink, '_blank');
     }
   };
 
@@ -401,6 +385,15 @@ const LivesListeVitrine = () => {
               Replays disponibles
             </Badge>
           </div>
+          
+          <Button 
+            onClick={() => setShowCreateForm(true)}
+            className="gradient-primary text-lg px-8 py-4"
+            size="lg"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Créer un Live
+          </Button>
         </div>
       </section>
 
@@ -554,6 +547,12 @@ const LivesListeVitrine = () => {
           </Button>
         </div>
       </section>
+
+      <CreateLiveForm 
+        open={showCreateForm} 
+        onClose={() => setShowCreateForm(false)}
+        onSubmit={handleCreateLive}
+      />
     </div>
   );
 };
