@@ -1,12 +1,22 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import HeaderWithNavbar from "@/components/HeaderWithNavbar";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Navigation from "@/components/Navigation";
+import { useEffect, useState } from "react";
 
 const Layout: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    setIsAuthenticated(!!token);
+  }, []);
+  
   return (
     <div className="min-h-screen bg-background">
-      <HeaderWithNavbar />
+      <HeaderWithNavbar isAuthenticated={isAuthenticated} />
 
       {/* Main Content */}
       <main>

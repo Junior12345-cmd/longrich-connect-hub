@@ -20,9 +20,13 @@ import {
   BookOpen,
   AlertCircle
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axiosInstance from '@/services/axiosInstance';
+import Swal from "sweetalert2";
 
 const RegisterVitrine = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -38,12 +42,86 @@ const RegisterVitrine = () => {
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+ 
+  const validateForm = () => {
+    const errors: { [key: string]: string } = {};
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Cette fonctionnalité nécessite Supabase
-    console.log('Inscription:', formData);
+    if (!formData.firstName.trim()) errors.firstName = "Le prénom est requis";
+    if (!formData.lastName.trim()) errors.lastName = "Le nom est requis";
+    if (!formData.email.trim()) errors.email = "L'email est requis";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = "Email invalide";
+
+    if (formData.password.length < 8) errors.password = "Le mot de passe doit contenir au moins 8 caractères";
+    if (formData.password !== formData.confirmPassword) errors.confirmPassword = "Les mots de passe ne correspondent pas";
+    if (!formData.acceptTerms) errors.acceptTerms = "Vous devez accepter les conditions";
+
+    if (Object.keys(errors).length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de formulaire',
+        html: Object.values(errors).map(err => `<p>${err}</p>`).join('')
+      });
+      return false;
+    }
+
+    return true;
   };
+
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      // CSRF pour Laravel Sanctum
+      await axiosInstance.get('/sanctum/csrf-cookie');
+
+      const response = await axiosInstance.post('/api/auth/register', {
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Inscription réussie',
+        text: response.data.message,
+      });
+
+      navigate('/login');
+    } catch (error: any) {
+      if (error.response?.status === 422) {
+        const validationErrors = error.response.data.errors;
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur de validation',
+          html: Object.values(validationErrors).flat().map((err: string) => `<p>${err}</p>`).join('')
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'Une erreur est survenue. Veuillez réessayer.',
+        });
+      }
+    }
+  };
+    
+  // Password strength
+  const getPasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
+  };
+
+  const strengthColors = ['bg-red-500','bg-red-400','bg-yellow-500','bg-green-500','bg-green-600'];
+  const strengthLabels = ['Très faible','Faible','Moyen','Fort','Très fort'];
+  const passwordStrength = getPasswordStrength(formData.password);
 
   const benefits = [
     {
@@ -67,20 +145,6 @@ const RegisterVitrine = () => {
       description: 'Accompagnement par nos experts MLM'
     }
   ];
-
-  const getPasswordStrength = (password: string) => {
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-    return strength;
-  };
-
-  const passwordStrength = getPasswordStrength(formData.password);
-  const strengthLabels = ['Très faible', 'Faible', 'Moyen', 'Fort', 'Très fort'];
-  const strengthColors = ['bg-red-500', 'bg-red-400', 'bg-yellow-500', 'bg-green-500', 'bg-green-600'];
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">

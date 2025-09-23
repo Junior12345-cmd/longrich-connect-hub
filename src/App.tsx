@@ -30,8 +30,11 @@ import FormationDetailsVitrine from "./pages/vitrine/FormationDetailsVitrine";
 import LivesListeVitrine from "./pages/vitrine/LivesListeVitrine";
 import LiveDetailsVitrine from "./pages/vitrine/LiveDetailsVitrine";
 import LoginVitrine from "./pages/auth/LoginVitrine";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 import RegisterVitrine from "./pages/auth/RegisterVitrine";
 import SearchByProduct from "./pages/vitrine/SearchByProduct";
+import GuestRoute from "./components/GuestRoute";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -75,8 +78,10 @@ const App = () => (
           </Route>
           {/* Catch-all global */}
           <Route path="*" element={<NotFound />} />
-          <Route path="/login" element={<LoginVitrine />} />
-          <Route path="/register" element={<RegisterVitrine />} />
+          <Route path="/login" element={<GuestRoute><LoginVitrine /></GuestRoute>} />
+          <Route path="/register" element={<GuestRoute><RegisterVitrine /></GuestRoute>} />
+          <Route path="/forgot-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
+          <Route path="/reset-password" element={<GuestRoute><ResetPassword /></GuestRoute>} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

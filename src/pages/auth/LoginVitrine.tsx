@@ -15,9 +15,13 @@ import {
   AlertCircle,
   LogIn
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axiosInstance from '@/services/axiosInstance';
+import Swal from 'sweetalert2';
 
 const LoginVitrine = () => {
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -29,21 +33,47 @@ const LoginVitrine = () => {
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
+  }; 
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Cette fonctionnalité nécessite Supabase
-    console.log('Connexion:', formData);
-    
-    // Simulation d'une requête
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  };
 
+    try {
+      // Récupérer CSRF cookie pour Laravel Sanctum
+      await axiosInstance.get('/sanctum/csrf-cookie');
+
+      // Envoyer requête login
+      const response = await axiosInstance.post('/api/auth/login', {
+        email: formData.email,
+        password: formData.password,
+        remember: formData.rememberMe,
+      });
+
+      // Sauvegarder token et user
+      localStorage.setItem('auth_token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Connexion réussie',
+        text: `Bienvenue ${response.data.user.firstname}!`,
+      });
+
+      navigate('/dashboard'); // Redirection après login
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Erreur de connexion';
+      Swal.fire({
+        icon: 'error',
+        title: 'Connexion échouée',
+        text: message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="container mx-auto px-4 py-12">
@@ -134,7 +164,7 @@ const LoginVitrine = () => {
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password text-muted-foreground">Mot de passe</Label>
                       <Link 
-                        to="/vitrine/forgot-password" 
+                        to="/forgot-password" 
                         className="text-sm text-primary hover:underline"
                       >
                         Mot de passe oublié ?

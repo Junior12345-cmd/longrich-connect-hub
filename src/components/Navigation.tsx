@@ -17,8 +17,13 @@ import {
   CreditCard,
   Settings,
   Menu,
-  X
+  X,
+  LogOut
 } from 'lucide-react';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import axiosInstance from '@/services/axiosInstance';
 
 const navigationItems = [
   { path: '/dashboard', icon: Home, label: 'Accueil' },
@@ -35,9 +40,40 @@ const navigationItems = [
   { path: '#', icon: CreditCard, label: 'Paiements' },
 ];
 
-const Navigation = () => {
+const handleLogout = async (navigate: any) => {
+  try {
+    // Appel backend pour supprimer le token
+    await axiosInstance.post("/api/auth/logout", {}, { withCredentials: true });
+
+    // Supprimer token local et info utilisateur
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("user");
+
+    // Feedback à l'utilisateur
+    Swal.fire({
+      icon: "success",
+      title: "Déconnecté",
+      text: "Vous avez été déconnecté avec succès",
+      confirmButtonText: "OK"
+    });
+
+    // Redirection vers login
+    navigate("/login");
+  } catch (error: any) {
+    Swal.fire({
+      icon: "error",
+      title: "Erreur",
+      text: error.response?.data?.message || "Impossible de se déconnecter",
+      confirmButtonText: "OK"
+    });
+  }
+};
+
+
+const Navigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
@@ -93,7 +129,15 @@ const Navigation = () => {
               Paramètres
             </Button>
           </Link>
+          {isAuthenticated && (
+            <Button variant="destructive" size="sm" className="w-full justify-start gap-3" onClick={() => handleLogout(navigate)}>
+              <LogOut className="w-4 h-4" />
+              Deconnexion
+            </Button>
+          )}
+          <p>{isAuthenticated }</p>
         </div>
+        
       </aside>
 
       {/* Mobile Header */}
@@ -121,7 +165,7 @@ const Navigation = () => {
             {navigationItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
-              
+
               return (
                 <Link
                   key={item.path}
@@ -147,9 +191,23 @@ const Navigation = () => {
                 </Link>
               );
             })}
+
+            {/* Bouton Déconnexion en dehors de la boucle */}
+            {isAuthenticated && (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="w-full justify-start gap-3 mt-4"
+                onClick={() => handleLogout(navigate)}
+              >
+                <LogOut className="w-4 h-4" />
+                Déconnexion
+              </Button>
+            )}
           </nav>
         </div>
       )}
+
     </>
   );
 };
