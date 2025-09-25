@@ -35,6 +35,9 @@ import RegisterVitrine from "./pages/auth/RegisterVitrine";
 import SearchByProduct from "./pages/vitrine/SearchByProduct";
 import GuestRoute from "./components/GuestRoute";
 import ResetPassword from "./pages/auth/ResetPassword";
+import ListShopUser from "./pages/dashboard/ListShopUser";
+import EditShopPage from "./pages/dashboard/EditShopPage";
+import ShopPublic from "./pages/dashboard/ShopPublic";
 
 const queryClient = new QueryClient();
 
@@ -49,7 +52,11 @@ const App = () => (
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Index />} />
             {/* <Route path="/search" element={<Search />} /> */}
-            <Route path="/dash/boutiques" element={<Boutiques />} />
+
+            <Route path="/dash/boutiques" element={<ListShopUser />} />
+            <Route path="/dash/shop/:id/dashboard" element={<Boutiques />} />
+            <Route path="/shops/edit/:id" element={<EditShopPage />} />
+
             <Route path="/dash/import-products" element={<ImportProducts />} />
             <Route path="/dash/formations" element={<Formations />} />
             <Route path="/dash/formations-management" element={<FormationsManagement />} />
@@ -66,7 +73,8 @@ const App = () => (
             <Route path="/" element={<LandingVitrine />} />
             <Route path="/about" element={<About />} />
             <Route path="/shop" element={<BoutiquesVitrine />} />
-            <Route path="/shops" element={<ShopUser />} />
+            <Route path="/shops/:slug" element={<ShopUser />} />
+            {/* <Route path="/shops/:slug" element={<ShopUser />} /> */}
             <Route path="/shop/:productId" element={<SingleProductPage />} />
             <Route path="/search-by-product" element={<SearchByProduct />} />
             <Route path="/packs" element={<CatalogueVitrine />} />

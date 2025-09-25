@@ -60,7 +60,7 @@ const LoginVitrine = () => {
         text: `Bienvenue ${response.data.user.firstname}!`,
       });
 
-      navigate('/dashboard'); // Redirection après login
+      navigate('/dashboard');
     } catch (error: any) {
       const message = error.response?.data?.message || 'Erreur de connexion';
       Swal.fire({

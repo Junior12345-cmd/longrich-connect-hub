@@ -62,14 +62,14 @@ const Boutiques = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">
-            Ma Boutique SaaS
+          <h1 className="text-3xl font-bold gradient-primary bg-clip-text ">
+            Ma Boutique
           </h1>
           <p className="text-muted-foreground">
             Gérez votre boutique en ligne et développez votre activité
           </p>
         </div>
-        <CreateShopForm onShopCreated={(shop) => setShops([...shops, shop])} />
+        {/* <CreateShopForm onShopCreated={(shop) => setShops([...shops, shop])} /> */}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
