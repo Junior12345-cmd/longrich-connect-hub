@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Crée une instance Axios
 const axiosInstance = axios.create({
-  baseURL:  import.meta.env.BACKEND_URL || "http://localhost:8000", 
+  baseURL:  import.meta.env.BACKEND_URL || "https://darkturquoise-rhinoceros-749906.hostingersite.com", 
   withCredentials: true, 
   headers: {
     "Content-Type": "application/json",

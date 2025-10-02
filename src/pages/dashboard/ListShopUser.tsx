@@ -165,16 +165,25 @@ const ListShopUser = () => {
                 <div className="flex gap-2">
                   <ShopTemplateSelector
                     shopId={shop.id}
-                    initialTemplate={shop.template ? JSON.parse(shop.template) : undefined}
+                    // disabled={['inactive', 'incomplete'].includes(shop?.status)}
+                    initialTemplate={
+                      (() => {
+                        try {
+                          return shop.template ? JSON.parse(shop.template) : undefined;
+                        } catch (e) {
+                          console.error("Erreur parsing template:", e);
+                          return undefined;
+                        }
+                      })()
+                    }
                     onTemplateSelected={(template) => updateShopTemplate(shop.id, template)}
                   />
-
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(shop.lien_shop, "_blank")}
-                  >
-                    Voir ma boutique
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(`/${shop.lien_shop}`, "_blank")}
+                    >
+                      Voir ma boutique
                   </Button>
 
                   <Button
@@ -190,7 +199,7 @@ const ListShopUser = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    disabled={shop.status === 'inactive'}
+                    disabled={['inactive', 'incomplete'].includes(shop?.status)}
                     onClick={() => {
                       if (shop.status === 'desactived') {
                         handleActivateShop(shop.id);
@@ -205,7 +214,8 @@ const ListShopUser = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => navigate(`/shops/${shop.id}/dashboard`)}
+                    disabled={['inactive', 'incomplete'].includes(shop?.status)}
+                    onClick={() => navigate(`/dash/shop/${shop.id}/dashboard`)}
                   >
                     Tableau de bord
                   </Button>

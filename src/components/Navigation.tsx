@@ -1,38 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Home, 
-  Search, 
-  Store, 
-  Package, 
-  GraduationCap, 
-  Video, 
-  Wand2, 
-  Users, 
-  MessageCircle, 
-  AlertCircle, 
-  Bell, 
-  CreditCard,
-  Settings,
-  Menu,
-  X,
-  LogOut
-} from 'lucide-react';
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { Home, Store, Package, GraduationCap, Video, Wand2, Users, MessageCircle, AlertCircle, Bell, CreditCard, Settings, Menu, X, LogOut } from 'lucide-react';
+import Swal from 'sweetalert2';
 import axiosInstance from '@/services/axiosInstance';
 
 const navigationItems = [
   { path: '/dashboard', icon: Home, label: 'Accueil' },
-  // { path: '/search', icon: Search, label: 'Recherche' },
   { path: '/dash/boutiques', icon: Store, label: 'Boutiques' },
-  { path: '/dash/packs', icon: Package, label: 'Packs d\'adhésion' },
+  { path: '/dash/packs', icon: Package, label: "Packs d'adhésion" },
   { path: '/dash/formations', icon: GraduationCap, label: 'Formations' },
   { path: '/dash/lives', icon: Video, label: 'Lives' },
-  { path: '#', icon: Wand2, label: 'Studio IA', badge: "Nouveau" },
+  { path: '#', icon: Wand2, label: 'Studio IA', badge: 'Nouveau' },
   { path: '#', icon: Users, label: 'Communauté' },
   { path: '/dash/messagerie', icon: MessageCircle, label: 'Messages', badge: 3 },
   { path: '#', icon: AlertCircle, label: 'Support' },
@@ -42,14 +22,18 @@ const navigationItems = [
 
 const handleLogout = async (navigate: any) => {
   try {
-    // Appel backend pour supprimer le token
-    await axiosInstance.post("/api/auth/logout", {}, { withCredentials: true });
 
-    // Supprimer token local et info utilisateur
+    // await axiosInstance.get("/sanctum/csrf-cookie");
+
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+
+    await axiosInstance.post("/api/auth/logout", {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
     localStorage.removeItem("auth_token");
-    localStorage.removeItem("user");
 
-    // Feedback à l'utilisateur
     Swal.fire({
       icon: "success",
       title: "Déconnecté",
@@ -57,7 +41,6 @@ const handleLogout = async (navigate: any) => {
       confirmButtonText: "OK"
     });
 
-    // Redirection vers login
     navigate("/login");
   } catch (error: any) {
     Swal.fire({
@@ -69,11 +52,31 @@ const handleLogout = async (navigate: any) => {
   }
 };
 
-
 const Navigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ lastname: string, firstname: string } | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const token = localStorage.getItem("auth_token");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (token) {
+        try {
+          // await axiosInstance.get("/sanctum/csrf-cookie");
+
+          const res = await axiosInstance.get("/api/profile", {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setUser(res.data);
+        } catch (err) {
+          console.error("Impossible de récupérer l'utilisateur :", err);
+        }
+      }
+    };
+    fetchUser();
+  }, [token]);
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
@@ -90,22 +93,18 @@ const Navigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
           </div>
           <span className="font-bold text-lg text-foreground">Longrich</span>
         </div>
-        
+
         <nav className="flex-1 px-4 py-6 space-y-1">
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
-            
             return (
               <Link
                 key={item.path}
                 to={item.path}
                 className={`
                   flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth
-                  ${active 
-                    ? 'bg-primary text-primary-foreground shadow-md' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                  }
+                  ${active ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}
                 `}
               >
                 <div className="flex items-center gap-3">
@@ -123,21 +122,24 @@ const Navigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
         </nav>
 
         <div className="p-4 border-t border-border">
+          {user && (
+            <p className="mb-2 text-sm font-medium text-foreground">
+              Bonjour, {user.lastname} {user.firstname}
+            </p>
+          )}
           <Link to="/settings">
             <Button variant="ghost" size="sm" className="w-full justify-start gap-3">
               <Settings className="w-4 h-4" />
               Paramètres
             </Button>
           </Link>
-          {isAuthenticated && (
-            <Button variant="destructive" size="sm" className="w-full justify-start gap-3" onClick={() => handleLogout(navigate)}>
+          {token && (
+            <Button variant="destructive" size="sm" className="w-full justify-start gap-3 mt-2" onClick={() => handleLogout(navigate)}>
               <LogOut className="w-4 h-4" />
-              Deconnexion
+              Déconnexion
             </Button>
           )}
-          <p>{isAuthenticated }</p>
         </div>
-        
       </aside>
 
       {/* Mobile Header */}
@@ -148,12 +150,8 @@ const Navigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
           </div>
           <span className="font-bold text-lg text-foreground">Longrich</span>
         </div>
-        
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
+
+        <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
       </header>
@@ -165,41 +163,22 @@ const Navigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
             {navigationItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
-
               return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`
-                    flex items-center justify-between gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-smooth
-                    ${active 
-                      ? 'bg-primary text-primary-foreground shadow-md' 
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                    }
-                  `}
-                >
+                <Link key={item.path} to={item.path} onClick={() => setIsMobileMenuOpen(false)} className={`
+                  flex items-center justify-between gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-smooth
+                  ${active ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}
+                `}>
                   <div className="flex items-center gap-3">
                     <Icon className="w-5 h-5" />
                     <span>{item.label}</span>
                   </div>
-                  {item.badge && (
-                    <Badge variant="secondary" className="text-xs">
-                      {item.badge}
-                    </Badge>
-                  )}
+                  {item.badge && <Badge variant="secondary" className="text-xs">{item.badge}</Badge>}
                 </Link>
               );
             })}
-
-            {/* Bouton Déconnexion en dehors de la boucle */}
-            {isAuthenticated && (
-              <Button
-                variant="destructive"
-                size="sm"
-                className="w-full justify-start gap-3 mt-4"
-                onClick={() => handleLogout(navigate)}
-              >
+            {user && <p className="mb-2 px-4 text-sm font-medium text-foreground">Bonjour, {user.lastname} {user.firstname}</p>}
+            {token && (
+              <Button variant="destructive" size="sm" className="w-full justify-start gap-3 mt-4" onClick={() => handleLogout(navigate)}>
                 <LogOut className="w-4 h-4" />
                 Déconnexion
               </Button>
@@ -207,7 +186,6 @@ const Navigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
           </nav>
         </div>
       )}
-
     </>
   );
 };

@@ -38,6 +38,8 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import ListShopUser from "./pages/dashboard/ListShopUser";
 import EditShopPage from "./pages/dashboard/EditShopPage";
 import ShopPublic from "./pages/dashboard/ShopPublic";
+import { EditProductPage } from "./pages/dashboard/EditProductPage";
+import EditPackForm from "./pages/dashboard/EditPackForm";
 
 const queryClient = new QueryClient();
 
@@ -54,7 +56,7 @@ const App = () => (
             {/* <Route path="/search" element={<Search />} /> */}
 
             <Route path="/dash/boutiques" element={<ListShopUser />} />
-            <Route path="/dash/shop/:id/dashboard" element={<Boutiques />} />
+            <Route path="/dash/shop/:shopId/dashboard" element={<Boutiques />} />
             <Route path="/shops/edit/:id" element={<EditShopPage />} />
 
             <Route path="/dash/import-products" element={<ImportProducts />} />
@@ -62,20 +64,29 @@ const App = () => (
             <Route path="/dash/formations-management" element={<FormationsManagement />} />
             <Route path="/dash/formation-player/:id" element={<FormationPlayer />} />
             <Route path="/dash/lives" element={<LivesManagement />} />
+
             <Route path="/dash/packs" element={<PacksManagement />} />
+            <Route path="/dash/packs/edit/:id" element={<EditPackForm />} />
+
             {/* <Route path="/dash/communauty" element={<Communaute />} /> */}
             <Route path="/dash/messagerie" element={<Messagerie />} />
             {/* <Route path="/dash/studio-ai" element={<StudioAI />} /> */}
+            <Route path="/shop/:productId/products/:productId/edit" element={<EditProductPage />} />
+
           </Route>
+
+          {/* boutiques */}
+          <Route path="/:slug" element={<ShopUser />} />
+          <Route path="/shop/:productId/produit" element={<SingleProductPage />} />
 
           {/* Groupe sans Layout (pages vitrines, ex. About) */}
           <Route element={<LayoutVitrine />}>
             <Route path="/" element={<LandingVitrine />} />
             <Route path="/about" element={<About />} />
             <Route path="/shop" element={<BoutiquesVitrine />} />
-            <Route path="/shops/:slug" element={<ShopUser />} />
+
+
             {/* <Route path="/shops/:slug" element={<ShopUser />} /> */}
-            <Route path="/shop/:productId" element={<SingleProductPage />} />
             <Route path="/search-by-product" element={<SearchByProduct />} />
             <Route path="/packs" element={<CatalogueVitrine />} />
             <Route path="/community" element={<CommunauteVitrine />} />

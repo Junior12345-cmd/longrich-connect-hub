@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,18 +16,75 @@ import {
   MoreHorizontal,
   Download
 } from 'lucide-react';
-import { toast } from 'sonner';
-import axiosInstance from '@/services/axiosInstance';
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 export const ProductsManagement = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-    const { shopId } = useParams<{ shopId: string }>();
   
+  const [products, setProducts] = useState([
+    {
+      id: '1',
+      name: 'Shampoing Superplex Premium',
+      description: 'Shampoing professionnel pour tous types de cheveux. Formule enrichie aux huiles essentielles.',
+      price: 7500,
+      quantity: 45,
+      category: 'Santé & Bien-être',
+      image: '🧴',
+      createdAt: '2024-12-01T10:00:00',
+      sales: 128,
+      rating: 4.8
+    },
+    {
+      id: '2', 
+      name: 'Café 3 en 1 Arabica',
+      description: 'Mélange café, lait et sucre. Saveur authentique, préparation instantanée.',
+      price: 1700,
+      quantity: 200,
+      category: 'Alimentation',
+      image: '☕',
+      createdAt: '2024-12-02T14:30:00',
+      sales: 89,
+      rating: 4.5
+    },
+    {
+      id: '3',
+      name: 'Crème visage anti-âge',
+      description: 'Crème hydratante avec collagène et vitamine E. Effet lifting visible en 7 jours.',
+      price: 22000,
+      quantity: 12,
+      category: 'Mode & Beauté',
+      image: '🧴',
+      createdAt: '2024-12-03T09:15:00',
+      sales: 34,
+      rating: 4.9
+    },
+    {
+      id: '4',
+      name: 'T-shirt coton bio',
+      description: 'T-shirt 100% coton biologique, coupe moderne. Disponible en plusieurs coloris.',
+      price: 8500,
+      quantity: 67,
+      category: 'Mode & Beauté',
+      image: '👕',
+      createdAt: '2024-12-04T11:20:00',
+      sales: 56,
+      rating: 4.3
+    },
+    {
+      id: '5',
+      name: 'Casque Bluetooth Premium',
+      description: 'Casque sans fil avec réduction de bruit active. Autonomie 30h.',
+      price: 45000,
+      quantity: 8,
+      category: 'Électronique',
+      image: '🎧',
+      createdAt: '2024-12-05T16:45:00',
+      sales: 23,
+      rating: 4.7
+    }
+  ]);
 
   const categories = [
     'Mode & Beauté',
@@ -40,44 +97,20 @@ export const ProductsManagement = () => {
     'Autres'
   ];
 
-  // Récupération dynamique des produits
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        await axiosInstance.get('/sanctum/csrf-cookie');
-        const token = localStorage.getItem('auth_token');
-        const res = await axiosInstance.get(`/api/products/${shopId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        // console.log(res.data)
-        setProducts(res.data);
-      } catch (err: any) {
-        console.error(err);
-        toast.error(err.response?.data?.message || 'Erreur lors de la récupération des produits');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
-
   const handleAddProduct = (newProduct: any) => {
     setProducts([...products, newProduct]);
   };
 
-  const deleteProduct = async (productId: string) => {
-    try {
-      const token = localStorage.getItem('auth_token');
-      await axiosInstance.post(`/api/products/delete/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setProducts(products.filter(p => p.id !== productId));
-      toast.success('Produit supprimé avec succès');
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Impossible de supprimer le produit');
-    }
+  const deleteProduct = (productId: string) => {
+    setProducts(products.filter(p => p.id !== productId));
   };
 
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('fr-FR').format(amount) + ' FCFA';
@@ -97,19 +130,6 @@ export const ProductsManagement = () => {
     return { label: 'En stock', variant: 'secondary' as const };
   };
 
-  if (loading) return <p>Chargement des produits...</p>;
-
-  const filteredProducts = products.filter(product => {
-    const name = product.name || '';
-    const description = product.description || '';
-    const matchesSearch =
-      name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
-    return matchesSearch && matchesCategory;
-  });
-  
-
   return (
     <div className="space-y-6">
       {/* Header & Filters */}
@@ -125,7 +145,6 @@ export const ProductsManagement = () => {
                 variant="outline" 
                 onClick={() => navigate('/dash/import-products')}
                 className="flex items-center gap-2"
-                disabled
               >
                 <Download className="w-4 h-4" />
                 Importer un produit
@@ -168,18 +187,17 @@ export const ProductsManagement = () => {
           
           return (
             <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center rounded-xl overflow-hidden">
-                <img 
-                  src={product.image} 
-                  alt={product.title} 
-                  className="w-full h-full object-cover" 
-                />                
+              <div className="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center text-6xl">
+                {product.image}
               </div>
               
               <CardContent className="p-4 space-y-3">
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-semibold text-lg leading-tight">{product.title}</h3>
+                    <h3 className="font-semibold text-lg leading-tight">{product.name}</h3>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="w-4 h-4" />
+                    </Button>
                   </div>
                   
                   <p className="text-sm text-muted-foreground line-clamp-2">
@@ -189,7 +207,7 @@ export const ProductsManagement = () => {
 
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">
-                  {product.category ? product.category.title : 'Sans catégorie'}
+                    {product.category}
                   </Badge>
                   <Badge variant={stockStatus.variant} className="text-xs">
                     {stockStatus.label}
@@ -201,10 +219,10 @@ export const ProductsManagement = () => {
                     <span className="text-2xl font-bold text-primary">
                       {formatAmount(product.price)}
                     </span>
-                    {/* <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       {product.rating}
-                    </div> */}
+                    </div>
                   </div>
                   
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -213,23 +231,16 @@ export const ProductsManagement = () => {
                   </div>
                   
                   <div className="text-xs text-muted-foreground">
-                    Ajouté le {formatDate(product.created_at)}
+                    Ajouté le {formatDate(product.createdAt)}
                   </div>
                 </div>
 
                 <div className="flex gap-2 pt-2">
-                  <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 flex items-center justify-center gap-2 transition-transform hover:scale-105 hover:bg-primary/10"
-                      onClick={() => navigate(`/shop/${product.id}/produit`)}
-                      title={`Voir les détails de ${product.name}`}
-                    >
-                      <Eye className="w-4 h-4" />
-                      Voir
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Eye className="w-4 h-4 mr-2" />
+                    Voir
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1"
-                    onClick={() => navigate(`/shop/${shopId}/products/${product.id}/edit/`)} >
+                  <Button variant="outline" size="sm" className="flex-1">
                     <Edit className="w-4 h-4 mr-2" />
                     Modifier
                   </Button>

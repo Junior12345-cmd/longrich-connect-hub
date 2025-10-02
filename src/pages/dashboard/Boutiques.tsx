@@ -1,78 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreateShopForm } from '@/components/CreateShopForm';
 import { ProductsManagement } from '@/components/ProductsManagement';
 import { OrdersManagement } from '@/components/OrdersManagement';
 import { 
-  Plus, 
-  Store, 
-  BarChart3, 
-  Package, 
   ShoppingCart, 
   Eye,
-  TrendingUp,
-  Users
+  BarChart3
 } from 'lucide-react';
+import { Link, useParams } from "react-router-dom";
+import axiosInstance from "@/services/axiosInstance"; 
 
-const Boutiques = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [shops, setShops] = useState<any[]>([]);
+const Boutiques: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<string>(() => localStorage.getItem('activeTab') || 'overview');
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    localStorage.setItem('activeTab', tab);
+  };
 
-  const stats = [
-    {
-      title: 'Visiteurs ce mois',
-      value: '2,847',
-      change: '+12%',
-      icon: Eye,
-      color: 'text-primary'
-    },
-    {
-      title: 'Commandes',
-      value: '128',
-      change: '+8%',
-      icon: ShoppingCart,
-      color: 'text-secondary'
-    },
-    {
-      title: 'Chiffre d\'affaires',
-      value: '1,240,000 FCFA',
-      change: '+15%',
-      icon: TrendingUp,
-      color: 'text-accent'
-    },
-    {
-      title: 'Produits actifs',
-      value: '47',
-      change: '+3',
-      icon: Package,
-      color: 'text-success'
-    }
-  ];
+  const { shopId } = useParams();
+  const [shop, setShop] = useState<any>(null);
+  const [stats, setStats] = useState<any[]>([]);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
 
-  const recentOrders = [
-    { id: '001', customer: 'Aminata Traoré', product: 'Shampoing Superplex', amount: '15,000 FCFA', status: 'Confirmé' },
-    { id: '002', customer: 'Jean Baptiste', product: 'Café 3 en 1', amount: '8,500 FCFA', status: 'En cours' },
-    { id: '003', customer: 'Fatou Diallo', product: 'Crème visage', amount: '22,000 FCFA', status: 'Livré' },
-  ];
+  useEffect(() => {
+    const fetchShopData = async () => {
+      try {
+        if (!shopId) return;
+
+        // await axiosInstance.get("/sanctum/csrf-cookie");
+        const token = localStorage.getItem("auth_token");
+
+        const res = await axiosInstance.get(`/api/shops/${shopId}/show`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setShop(res.data || null);
+        setStats(res.data.stats || []);
+        setRecentOrders(res.data.recentOrders || []);
+
+      } catch (error: any) {
+        console.error("Erreur lors de la récupération des données de la boutique :", error);
+      }
+    };
+
+    fetchShopData();
+  }, [shopId]);
+
+  // console.log(shop)
+
+  if (!shop) return <p>Chargement...</p>;
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold gradient-primary bg-clip-text ">
-            Ma Boutique
+            {shop.title}
           </h1>
           <p className="text-muted-foreground">
             Gérez votre boutique en ligne et développez votre activité
           </p>
         </div>
-        {/* <CreateShopForm onShopCreated={(shop) => setShops([...shops, shop])} /> */}
+
+        <div className="flex gap-4">
+          <Link to={`/${shop.lien_shop}`}>
+            <Button className="gradient-secondary">
+              <Eye className="w-4 h-4 mr-2" />
+              Voir ma boutique
+            </Button>
+          </Link>
+
+          <Link to="/dash/boutiques">
+            <Button className="gradient-secondary">
+              <Eye className="w-4 h-4 mr-2" />
+              Liste des boutiques
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
           <TabsTrigger value="products">Produits</TabsTrigger>
@@ -80,25 +90,22 @@ const Boutiques = () => {
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
+        {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {stats.map((stat, index) => {
-              const Icon = stat.icon;
+              const Icon = stat.icon || BarChart3; // Icon par défaut
               return (
                 <Card key={index} className="gradient-card">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {stat.title}
-                        </p>
+                        <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
                         <p className="text-2xl font-bold">{stat.value}</p>
-                        <Badge variant="secondary" className="text-xs">
-                          {stat.change}
-                        </Badge>
+                        <Badge variant="secondary" className="text-xs">{stat.change}</Badge>
                       </div>
-                      <Icon className={`w-8 h-8 ${stat.color}`} />
+                      <Icon className={`w-8 h-8 ${stat.color || 'text-primary'}`} />
                     </div>
                   </CardContent>
                 </Card>
@@ -116,11 +123,19 @@ const Boutiques = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {recentOrders.map((order) => (
+                {recentOrders.length > 0 ? recentOrders.map(order => (
                   <div key={order.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
                     <div className="space-y-1">
-                      <p className="font-medium">{order.customer}</p>
-                      <p className="text-sm text-muted-foreground">{order.product}</p>
+                      <p className="font-medium">{order.customer.name} ({order.customer.phone})</p>
+                      <p className="text-sm text-muted-foreground">
+                        <Link 
+                          to={`/shop/${order.product.id}/produit`} 
+                          className="text-blue-600 hover:underline"
+                        >
+                          {order.product.title}
+                        </Link>
+                        {" - "}{order.reference}
+                      </p>
                     </div>
                     <div className="text-right space-y-1">
                       <p className="font-semibold">{order.amount}</p>
@@ -132,10 +147,10 @@ const Boutiques = () => {
                       </Badge>
                     </div>
                   </div>
-                ))}
-                <Button variant="outline" className="w-full">
-                  Voir toutes les commandes
-                </Button>
+                )) : (
+                  <p className="text-muted-foreground text-center py-4">Aucune commande récente.</p>
+                )}
+                <Button variant="outline" className="w-full">Voir toutes les commandes</Button>
               </CardContent>
             </Card>
 
@@ -178,9 +193,7 @@ const Boutiques = () => {
                 <p className="text-muted-foreground mb-4">
                   Obtenez des insights détaillés sur votre activité
                 </p>
-                <Button className="gradient-primary">
-                  Voir les statistiques
-                </Button>
+                <Button className="gradient-primary">Voir les statistiques</Button>
               </div>
             </CardContent>
           </Card>

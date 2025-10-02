@@ -88,7 +88,6 @@ const CreatePackForm = ({ open, onClose, onSubmit }: CreatePackFormProps) => {
       const response = await axiosInstance.post("/api/packs/create", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
   
       toast.success("Pack créé avec succès !");
       
