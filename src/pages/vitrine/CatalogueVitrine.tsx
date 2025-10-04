@@ -1,129 +1,163 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Search, 
-  Plus,
-  Package,
-  Users,
-  ArrowRight,
-  Check
-} from 'lucide-react';
-import CreatePackForm from '@/components/CreatePackForm';
+import { Search, Package, Users, ArrowRight, Check, Plus } from 'lucide-react';
 import axiosInstance from '@/services/axiosInstance';
-import { cn } from '@/lib/utils';
+import CreatePackForm from '@/components/CreatePackForm';
 
 interface Country {
-  id: string;
+  id: number;
   code: string;
   title: string;
+  flag: string;
 }
 
 interface Pack {
   id: number;
   name: string;
   price: string;
-  pv: number;
-  products: number;
+  pv?: number;
+  products?: number;
   features: string[];
-  popular: boolean;
+  popular?: boolean;
   country: string;
+  description: string;
+  status: string;
 }
 
 const CatalogueVitrine = () => {
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const [selectedCountry, setSelectedCountry] = useState('1'); // Default to Senegal's country_id
   const [countries, setCountries] = useState<Country[]>([]);
-  const [packs, setPacks] = useState<Pack[]>([]);
-  const [loadingPacks, setLoadingPacks] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [customPacks, setCustomPacks] = useState<Pack[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [packs, setPacks] = useState<Pack[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Récupération des pays
+  // Fetch countries from the backend
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const token = localStorage.getItem('auth_token');
-        await axiosInstance.get('/sanctum/csrf-cookie');
-
-        const res = await axiosInstance.get('/api/countries', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const countryList: Country[] = res.data || [];
-        setCountries(countryList);
-        if (countryList.length > 0) setSelectedCountry(countryList[0].code);
+        const response = await axiosInstance.get('/api/countries');
+        // console.log('Countries Response:', response.data);
+        let data = Array.isArray(response.data)
+          ? response.data
+          : response.data.countries || response.data.data || [];
+        if (!Array.isArray(data)) {
+          console.error('Expected an array for countries, received:', data);
+          setError('Invalid countries data format.');
+          return;
+        }
+        setCountries(data);
       } catch (err) {
-        console.error('Erreur lors de la récupération des pays:', err);
-        setCountries([]);
+        console.error('Failed to fetch countries:', err);
+        setError('Failed to fetch countries. Please try again.');
       }
     };
     fetchCountries();
   }, []);
 
-  // Récupération des packs par pays
+  // Fetch packs from the backend
   useEffect(() => {
-    if (!selectedCountry) return;
-  
     const fetchPacks = async () => {
-      setLoadingPacks(true);
+      setLoading(true);
       try {
-        await axiosInstance.get('/sanctum/csrf-cookie');
-        const token = localStorage.getItem('auth_token');
-  
-        const res = await axiosInstance.get('/api/packs', {
-          headers: { Authorization: `Bearer ${token}` },
+        const response = await axiosInstance.get('/api/packs/search', {
+          params: { country_id: selectedCountry },
         });
-  
-        const allPacks: Pack[] = res.data.packs || [];
-        const countryPacks = allPacks.filter(
-          (p) => typeof p.country === 'string' && p.country.toLowerCase() === selectedCountry.toLowerCase()
-        );
-        setPacks(countryPacks);
-
-        setPacks(countryPacks);
-        
-        
-  
-        console.log('Packs récupérés:',  res.data );
-        // setPacks(countryPacks);
+        console.log('Packs Response:', response.data);
+        let data = response.data;
+        // Handle single object or array
+        if (!Array.isArray(data)) {
+          if (data.packs && Array.isArray(data.packs)) {
+            data = data.packs;
+          } else if (data.data && Array.isArray(data.data)) {
+            data = data.data;
+          } else if (data && typeof data === 'object') {
+            data = [data]; // Convert single object to array
+          } else {
+            console.error('Expected an array or single pack, received:', data);
+            setError('Invalid packs data format.');
+            setPacks([]);
+            setLoading(false);
+            return;
+          }
+        }
+        const fetchedPacks = data.map((pack: any) => ({
+          id: pack.id,
+          name: pack.title,
+          price: `${pack.price} FCFA`,
+          pv: pack.pv || 100,
+          products: pack.products || 10,
+          features: typeof pack.features === 'string' ? JSON.parse(pack.features) : pack.features || [],
+          popular: pack.popular || false,
+          country: String(pack.country_id), // Ensure string for consistency
+          description: pack.description || '',
+          status: pack.status || 'actived',
+        }));
+        setPacks(fetchedPacks.filter((pack: Pack) => pack.status === 'actived'));
+        setError(null);
       } catch (err) {
-        console.error('Erreur lors de la récupération des packs:', err);
+        setError('Failed to fetch packs. Please try again.');
+        console.error('Fetch error:', err);
         setPacks([]);
       } finally {
-        setLoadingPacks(false);
+        setLoading(false);
       }
     };
     fetchPacks();
   }, [selectedCountry]);
-  
 
-  // Packs filtrés par recherche
-  const getFilteredPacks = (packList: Pack[]) => {
-    if (!searchTerm.trim()) return packList;
-    return packList.filter(
-      (pack) =>
-        pack.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pack.features.some((f) => f.toLowerCase().includes(searchTerm.toLowerCase()))
+  // Filter packs by search term
+  const getFilteredPacks = (packs: Pack[]) => {
+    if (!searchTerm.trim()) return packs;
+    return packs.filter(pack =>
+      pack.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pack.features.some(feature => feature.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   };
 
-  const handleCreatePack = (newPack: Pack) => {
-    setCustomPacks(prev => [...prev, newPack]);
+  // Handle pack creation
+  const handleCreatePack = async (newPack: any) => {
+    try {
+      const response = await axiosInstance.post('/api/packs', {
+        country_id: newPack.country,
+        title: newPack.name,
+        description: newPack.description || '',
+        price: parseInt(newPack.price.replace(/[^0-9]/g, '')),
+        features: JSON.stringify(newPack.features),
+        status: 'actived',
+        pv: newPack.pv || 100,
+        products: newPack.products || 10,
+        popular: newPack.popular || false,
+      });
+      setPacks(prev => [
+        ...prev,
+        {
+          id: response.data.id,
+          name: response.data.title,
+          price: `${response.data.price} FCFA`,
+          pv: response.data.pv || 100,
+          products: response.data.products || 10,
+          features: JSON.parse(response.data.features),
+          popular: response.data.popular || false,
+          country: String(response.data.country_id),
+          description: response.data.description || '',
+          status: response.data.status || 'actived',
+        },
+      ]);
+      setShowCreateForm(false);
+    } catch (err) {
+      console.error('Failed to create pack:', err);
+      alert('Failed to create pack. Please try again.');
+    }
   };
-
-  // Combiner packs API + packs personnalisés
-  const displayedPacks = [
-    ...packs,
-    ...customPacks.filter((p) => p.country === selectedCountry)
-  ];
 
   return (
     <div className="min-h-screen bg-background">
-
       {/* Hero Section */}
       <section className="py-12 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-6">
@@ -135,44 +169,39 @@ const CatalogueVitrine = () => {
             & Packs d'Adhésion
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Découvrez notre gamme complète de produits certifiés et choisissez 
+            Découvrez notre gamme complète de produits certifiés et choisissez
             le pack d'adhésion adapté à votre pays.
           </p>
         </div>
       </section>
 
       {/* Search & Filters */}
-      <section className="py-8 bg-background border-b">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row gap-4 items-center">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input 
-              placeholder="Rechercher un pack..." 
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filtrer par pays" />
-              </SelectTrigger>
-              <SelectContent>
-                {countries.map((country) => (
-                  <SelectItem key={country.code} value={country.code}>
-                    {country.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button 
-              onClick={() => setShowCreateForm(true)}
-              className="gradient-primary"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Ajouter un Pack
-            </Button>
+      <section className="py-8 bg-background border-b flex justify-center items-center">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                placeholder="Rechercher un pack..."
+                className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2 items-center">
+              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Filtrer par pays" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countries.map(country => (
+                    <SelectItem key={country.id} value={String(country.id)}>
+                      {country.title} 
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </section>
@@ -191,13 +220,13 @@ const CatalogueVitrine = () => {
             {/* Country Selector */}
             <div className="flex justify-center">
               <div className="flex gap-2 p-1 bg-muted rounded-lg flex-wrap">
-                {countries.map((country) => (
+                {countries.map(country => (
                   <Button
                     key={country.id}
-                    variant={selectedCountry === country.id ? 'default' : 'ghost'}
+                    variant={selectedCountry === String(country.id) ? 'default' : 'ghost'}
                     size="sm"
-                    onClick={() => setSelectedCountry(country.id)}
-                    className={selectedCountry === country.id ? 'gradient-primary' : ''}
+                    onClick={() => setSelectedCountry(String(country.id))}
+                    className={selectedCountry === String(country.id) ? 'gradient-primary' : ''}
                   >
                     {country.title}
                   </Button>
@@ -206,67 +235,62 @@ const CatalogueVitrine = () => {
             </div>
 
             {/* Packs Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {loadingPacks ? (
-                <p>Chargement des packs...</p>
-              ) : displayedPacks.length === 0 ? (
-                <p>Aucun pack disponible pour ce pays.</p>
+            {loading ? (
+                <div className="flex items-center justify-center min-h-screen">
+                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : error ? (
+                <p className="text-red-500">{error}</p>
+              ) : packs.length === 0 ? (
+                <p>No packs available for this country.</p>
               ) : (
-                getFilteredPacks(displayedPacks).map((pack) => (
-                  <Card 
-                    key={pack.id} 
-                    className={`gradient-card relative ${pack.popular ? 'ring-2 ring-primary' : ''}`}
-                  >
-                    {pack.popular && (
-                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                        <Badge className="gradient-primary text-white px-4">
-                          ⭐ POPULAIRE
-                        </Badge>
-                      </div>
-                    )}
-                    <CardHeader className="text-center">
-                      <CardTitle className="text-xl">{pack.name}</CardTitle>
-                      <div className="space-y-2">
-                        <div className="text-3xl font-bold text-primary">{pack.price}</div>
-                        <div className="flex justify-center space-x-4 text-sm text-muted-foreground">
-                          <div className="flex items-center space-x-1">
-                            <Package className="w-4 h-4" />
-                            <span>{pack.products} produits</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Users className="w-4 h-4" />
-                            <span>{pack.pv} PV</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                  {getFilteredPacks(packs.filter(pack => pack.country === String(selectedCountry))).map((pack: Pack) => (
+                    <Card
+                      key={pack.id}
+                      className={`gradient-card relative ${pack.popular ? 'ring-2 ring-primary' : ''}`}
+                    >
+                      <CardHeader className="text-center">
+                        <CardTitle className="text-xl">{pack.name}</CardTitle>
+                        <div className="space-y-2">
+                          <div className="text-3xl font-bold text-primary">{pack.price}</div>
+                          <div className="flex justify-center space-x-4 text-sm text-muted-foreground">
+                            <div className="flex items-center space-x-1">
+                              <Package className="w-4 h-4" />
+                              <span>{pack.products} produits</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        {pack.features.map((feature, index) => (
-                          <div key={`${pack.id}-feature-${index}`} className="flex items-center space-x-2">
-                            <Check className="w-4 h-4 text-green-500" />
-                            <span className="text-sm">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <Button 
-                        className={pack.popular ? 'gradient-primary w-full' : 'w-full'}
-                        variant={pack.popular ? 'default' : 'outline'}
-                      >
-                        Rejoindre avec ce pack
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          {pack.features.map((feature, featureIndex) => (
+                            <div key={featureIndex} className="flex items-center space-x-2">
+                              <Check className="w-4 h-4 text-green-500" />
+                              <span className="text-sm">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <Button
+                          className={pack.popular ? 'gradient-primary w-full' : 'w-full'}
+                          variant={pack.popular ? 'default' : 'outline'}
+                          disabled
+                        >
+                          Rejoindre avec ce pack
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+            )}
           </div>
         </div>
       </section>
 
-      <CreatePackForm 
-        open={showCreateForm} 
+      {/* CreatePackForm */}
+      <CreatePackForm
+        open={showCreateForm}
         onClose={() => setShowCreateForm(false)}
         onSubmit={handleCreatePack}
       />

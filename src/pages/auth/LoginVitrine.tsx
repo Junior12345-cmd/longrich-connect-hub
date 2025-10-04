@@ -41,14 +41,14 @@ const LoginVitrine = () => {
 
     try {
       // Récupérer CSRF cookie pour Laravel Sanctum
-      await axiosInstance.get('/sanctum/csrf-cookie');
 
-      // Envoyer requête login
       const response = await axiosInstance.post('/api/auth/login', {
         email: formData.email,
         password: formData.password,
         remember: formData.rememberMe,
       });
+
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
       // Sauvegarder token et user
       localStorage.setItem('auth_token', response.data.token);

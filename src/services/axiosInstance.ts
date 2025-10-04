@@ -1,23 +1,27 @@
-// src/services/axiosInstance.ts
-import axios from "axios";
+import axios from 'axios';
 
 // Crée une instance Axios
 const axiosInstance = axios.create({
-  baseURL:  import.meta.env.BACKEND_URL || "https://darkturquoise-rhinoceros-749906.hostingersite.com", 
-  withCredentials: true, 
+  baseURL: 'http://localhost:8000', // change si ton backend est ailleurs
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
+  withCredentials: false, // pas besoin pour API stateless
 });
 
-// Intercepteur pour ajouter token si besoin (depuis localStorage)
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("auth_token");
-  if (token) {
-    config.headers!["Authorization"] = `Bearer ${token}`;
+// Interceptor pour ajouter le token automatiquement
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('auth_token');
+    if (token && config.headers) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
 export default axiosInstance;

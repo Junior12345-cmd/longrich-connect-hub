@@ -55,7 +55,7 @@ const PacksManagement = () => {
   useEffect(() => {
     const fetchPacks = async () => {
       try {
-        await axiosInstance.get('/sanctum/csrf-cookie');
+        // await axiosInstance.get('/sanctum/csrf-cookie');
         const token = localStorage.getItem('auth_token');
         const res = await axiosInstance.get('/api/packs', {
           headers: { Authorization: `Bearer ${token}` },
@@ -82,37 +82,34 @@ const PacksManagement = () => {
         const res = await axiosInstance.get('/api/countries', {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+  
         const countriesWithFlags = res.data.map((c: any) => ({
           ...c,
           flag: getFlagByCode(c.code),
         }));
-
+  
         setCountries(countriesWithFlags);
       } catch (error) {
         console.error("Erreur lors de la récupération des pays :", error);
       }
     };
-
+  
     fetchCountries();
   }, []);
+  
 
   // Filtrage des packs
-  const filteredPacks = packs
-    .filter(pack => pack && pack.title && pack.description)
-    .filter(pack => {
-      const matchesSearch =
-        pack.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pack.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCountry =
-        selectedCountry === 'all' || pack.country?.id === Number(selectedCountry);
-      return matchesSearch && matchesCountry;
-    });
+  const filteredPacks = packs.filter(pack =>
+    pack && pack.title && pack.description &&
+    (pack.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     pack.description.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+  
 
   // Création d'un pack
   const handleCreatePack = async (newPack: any) => {
     try {
-      await axiosInstance.get('/sanctum/csrf-cookie');
+      // await axiosInstance.get('/sanctum/csrf-cookie');
       const token = localStorage.getItem('auth_token');
       const res = await axiosInstance.post('/api/packs/create', newPack, {
         headers: { Authorization: `Bearer ${token}` },
@@ -169,15 +166,21 @@ const PacksManagement = () => {
     toast.success('Statut du pack mis à jour');
   };
 
-  const getCountryName = (id?: number) => countries.find(c => c.id === id)?.title || 'Inconnu';
-  const getCountryFlag = (code?: string) => getFlagByCode(code);
-
-  const stats = {
-    total: packs.length,
-    countries: new Set(packs.map(p => p.country?.id)).size,
-    popular: packs.filter(p => p.popular).length,
-    totalPV: packs.reduce((sum, pack) => sum + (pack.pv || 0), 0),
-  };
+  // const getCountryName = (id?: number) => {
+  //   if (!id) return 'Inconnu';
+  //   return countries.find(c => c.id === id)?.title || 'Inconnu';
+  // };
+  
+  // const getCountryFlag = (code?: string) => {
+  //   if (!code) return '🌍';
+  //   return getFlagByCode(code);
+  // };
+  
+  // const stats = {
+  //   total: packs.length,
+  //   countries: new Set(packs.map(p => p.country?.id)).size,
+  //   popular: packs.filter(p => p.popular).length,
+  // };
 
 
   // Fonction pour activer/désactiver un pack
@@ -227,7 +230,9 @@ const PacksManagement = () => {
       </div>
 
       {loading ? (
-        <p>Chargement des packs...</p>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
       ) : (
         <>
           {/* Filtres */}
@@ -254,6 +259,7 @@ const PacksManagement = () => {
                 ))}
               </SelectContent>
             </Select>
+
           </div>
 
           {/* Liste des packs */}
@@ -270,9 +276,9 @@ const PacksManagement = () => {
                             <Star className="w-3 h-3 mr-1" /> Populaire
                           </Badge>
                         )}
-                        <Badge variant="outline">
+                        {/* <Badge variant="outline">
                           {getCountryFlag(pack.country?.code)} {getCountryName(pack.country?.id)}
-                        </Badge>
+                        </Badge> */}
                       </div>
                       <CardDescription className="max-w-2xl">{pack.description}</CardDescription>
                     </div>

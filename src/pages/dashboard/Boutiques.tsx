@@ -51,8 +51,14 @@ const Boutiques: React.FC = () => {
 
   // console.log(shop)
 
-  if (!shop) return <p>Chargement...</p>;
-
+  if (!shop) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+  
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

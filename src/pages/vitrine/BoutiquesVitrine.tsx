@@ -60,7 +60,7 @@ const BoutiquesVitrine = () => {
           </div>
 
           <div className="flex justify-center">
-            <Link to="/shops">
+            <Link to="/login">
               <Button 
                 size="lg" 
                 className="gradient-primary text-lg px-8 py-4 flex items-center gap-2"

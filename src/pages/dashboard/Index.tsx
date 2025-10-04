@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,14 +16,12 @@ import {
   MessageCircle,
   Star
 } from 'lucide-react';
+import axiosInstance from '@/services/axiosInstance';
 
 const Index = () => {
-  const quickStats = [
-    { label: 'Membres actifs', value: '12,547', icon: Users, color: 'text-primary' },
-    { label: 'Boutiques', value: '3,241', icon: Store, color: 'text-secondary' },
-    { label: 'Formations', value: '156', icon: GraduationCap, color: 'text-accent' },
-    { label: 'Lives cette semaine', value: '24', icon: Video, color: 'text-success' }
-  ];
+  const [quickStats, setQuickStats] = useState([]);
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [statsError, setStatsError] = useState(null);
 
   const recentNews = [
     {
@@ -55,6 +53,60 @@ const Index = () => {
     { name: 'Aminata Traoré', location: 'Bamako', rating: 4.7, sales: '1.5M FCFA' }
   ];
 
+  // Map icon names to components
+  const iconMap = {
+    Users: Users,
+    Store: Store,
+    GraduationCap: GraduationCap,
+    Video: Video
+  };
+
+  // Fetch stats from API
+  useEffect(() => {
+    const fetchStats = async () => {
+      setStatsLoading(true);
+      setStatsError(null);
+      try {
+        const token = localStorage.getItem("auth_token");
+
+        const response = await axiosInstance.get('/api/stats', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        console.log('Stats Response:', response.data);
+
+        let data = Array.isArray(response.data)
+          ? response.data
+          : response.data.stats || response.data.data || [];
+
+        if (!Array.isArray(data)) {
+          console.error('Expected an array for stats, received:', data);
+          setStatsError('Invalid stats data format.');
+          setQuickStats([]);
+          return;
+        }
+
+        // Map API data to include icon components
+        const fetchedStats = data.map((stat) => ({
+          label: stat.label,
+          value: stat.value,
+          icon: iconMap[stat.icon] || Sparkles, 
+          color: stat.color
+        }));
+
+        setQuickStats(fetchedStats);
+      } catch (err) {
+        setStatsError('Failed to fetch stats. Please try again.');
+        console.error('Fetch error:', err);
+        setQuickStats([]);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -83,6 +135,7 @@ const Index = () => {
                 <Search className="w-4 h-4 mr-2" />
                 Rechercher
               </Button>
+              
             </div>
           </div>
         </div>
@@ -91,20 +144,28 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {quickStats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <Card key={index} className="gradient-card hover:shadow-lg transition-smooth">
-                <CardContent className="p-6 text-center">
-                  <Icon className={`w-8 h-8 mx-auto mb-3 ${stat.color}`} />
-                  <div className="space-y-1">
-                    <p className="text-2xl font-bold">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {statsLoading ? (
+            <p className="text-center col-span-full">Chargement des statistiques...</p>
+          ) : statsError ? (
+            <p className="text-red-500 text-center col-span-full">{statsError}</p>
+          ) : quickStats.length === 0 ? (
+            <p className="text-center text-muted-foreground col-span-full">Aucune statistique disponible.</p>
+          ) : (
+            quickStats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Card key={index} className="gradient-card hover:shadow-lg transition-smooth">
+                  <CardContent className="p-6 text-center">
+                    <Icon className={`w-8 h-8 mx-auto mb-3 ${stat.color}`} />
+                    <div className="space-y-1">
+                      <p className="text-2xl font-bold">{stat.value}</p>
+                      <p className="text-sm text-muted-foreground">{stat.label}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

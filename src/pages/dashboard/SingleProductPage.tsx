@@ -53,9 +53,7 @@ const SingleProductPage = () => {
         await axiosInstance.get("/sanctum/csrf-cookie");
         const token = localStorage.getItem("auth_token");
 
-        const res = await axiosInstance.get(`/api/products/show/${productId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axiosInstance.get(`/api/products/show/${productId}`);
         setProduct(res.data);
       } catch {
         setProduct(null);
