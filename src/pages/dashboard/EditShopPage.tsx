@@ -38,10 +38,11 @@ const EditShopPage: React.FC = () => {
     const fetchShop = async () => {
       try {
         const token = localStorage.getItem('auth_token');
-        const res = await axiosInstance.get(`/api/shops/${id}`, {
+        const res = await axiosInstance.get(`/api/shops/${id}/show`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const shop = res.data;
+        const shop = res.data.shop;
+        // console.log(shop);
         setFormData({
           title: shop.title,
           description: shop.description || '',

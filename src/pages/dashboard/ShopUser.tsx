@@ -102,9 +102,6 @@ const ShopPage = () => {
       </div>
     );
   }
-  
-  
-  
 
   // Filtrer les produits selon recherche
   const filteredProducts = (shop?.products ?? []).filter((p) => {

@@ -108,23 +108,23 @@ export const EditProductPage: React.FC = () => {
       formDataToSend.append("quantity", formData.quantity);
       formDataToSend.append("category", formData.category);
 
-      formData.images.forEach((file, index) => {
-        if (file instanceof File) {
-          formDataToSend.append(`images[${index}]`, file);
-        } else {
-          formDataToSend.append(`existing_images[${index}]`, file);
-        }
-      });
+      // formData.images.forEach((file, index) => {
+      //   if (file instanceof File) {
+      //     formDataToSend.append(`images[${index}]`, file);
+      //   } else {
+      //     formDataToSend.append(`existing_images[${index}]`, file);
+      //   }
+      // });
 
       await axiosInstance.get("/sanctum/csrf-cookie");
       await axiosInstance.post(`/api/products/${productId}/update`, formDataToSend, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`
+          // "Content-Type": "multipart/form-data",
         },
       });
-
-      navigate(`/shops/${shopId}/products`);
+      // console.log(formData.category);
+      navigate(`/dash/shop/${formData.shop_id}/dashboard`);
     } catch (error: any) {
       if (error.response?.status === 422) {
         setErrors(error.response.data.errors);
@@ -197,52 +197,6 @@ export const EditProductPage: React.FC = () => {
                   ))}
                 </select>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Images du produit</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {/* Affichage des images */}
-              {Array.isArray(formData.images) && formData.images.length > 0 ? (
-  formData.images.map((img, index) => (
-    <div key={index} className="relative">
-      <img
-        src={img instanceof File ? URL.createObjectURL(img) : img}
-        alt={`preview-${index}`}
-        className="w-full h-24 object-cover rounded"
-      />
-      <button
-        type="button"
-        onClick={() => removeImage(index)}
-        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-      >
-        <X className="w-3 h-3" />
-      </button>
-    </div>
-  ))
-) : (
-  <span className="text-muted-foreground italic col-span-2">Aucune image disponible</span>
-)}
-
-
-
-              {/* Input pour ajouter de nouvelles images */}
-              <label className="cursor-pointer border-2 border-dashed rounded-lg p-6 text-center hover:border-primary">
-                <Upload className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-sm">Ajouter des images</p>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </label>
             </div>
           </CardContent>
         </Card>

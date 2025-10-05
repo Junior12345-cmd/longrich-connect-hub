@@ -40,6 +40,7 @@ import EditShopPage from "./pages/dashboard/EditShopPage";
 import ShopPublic from "./pages/dashboard/ShopPublic";
 import { EditProductPage } from "./pages/dashboard/EditProductPage";
 import EditPackForm from "./pages/dashboard/EditPackForm";
+import ConfirmationPage from "./pages/dashboard/ConfirmationPage";
 
 const queryClient = new QueryClient();
 
@@ -74,10 +75,12 @@ const App = () => (
             <Route path="/shop/:productId/products/:productId/edit" element={<EditProductPage />} />
 
           </Route>
-
+  
           {/* boutiques */}
           <Route path="/:slug" element={<ShopUser />} />
           <Route path="/shop/:productId/produit" element={<SingleProductPage />} />
+          <Route path="/confirmation/:transactionId" element={<ConfirmationPage />} />
+
 
           {/* Groupe sans Layout (pages vitrines, ex. About) */}
           <Route element={<LayoutVitrine />}>

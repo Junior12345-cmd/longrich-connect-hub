@@ -17,7 +17,9 @@ interface Shop {
   status: 'incomplete' | 'complete' | 'inactive' | 'desactived' | 'pending';
   solde: number;
   template?: string | null;
-  lien_shop: string
+  lien_shop: string,
+  salesTax: string,
+  paymentOnDelivery: string,
 }
 
 const ListShopUser = () => {
@@ -34,7 +36,6 @@ const ListShopUser = () => {
         const res = await axiosInstance.get('/api/shops', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        // res.data doit contenir status pour chaque shop
         setShops(res.data);
       } catch (err: any) {
         console.error(err.message);
@@ -205,16 +206,32 @@ const ListShopUser = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    disabled={['inactive', 'incomplete'].includes(shop?.status)}
                     onClick={() => {
-                      if (shop.status === 'desactived') {
+                      // Cast des strings en booléens
+                      const salesTax = shop.salesTax === "true";
+                      const paymentOnDelivery = shop.paymentOnDelivery === "true";
+
+                      if (shop.status === 'incomplete') {
+                        if (salesTax && !paymentOnDelivery) {
+                          // Activer directement la boutique
+                          handleActivateShop(shop.id);
+                        } else if (!salesTax && paymentOnDelivery) {
+                          // Rediriger vers la page de paiement pour payer les frais
+                          navigate(`/shops/${shop.id}/payment`);
+                        } else {
+                          // Cas inattendu : message d'erreur ou fallback
+                          toast.error("Impossible d'activer la boutique : conditions non remplies");
+                        }
+                      } else if (shop.status === 'desactived') {
+                        // Pour les boutiques déjà désactivées : réactiver normalement
                         handleActivateShop(shop.id);
                       } else {
+                        // Désactivation normale pour les boutiques actives
                         handleDeactivateShop(shop.id);
                       }
                     }}
                   >
-                    {shop.status === 'desactived' ? 'Réactiver' : 'Désactiver'}
+                    {shop.status === 'incomplete' ? 'Activer' : shop.status === 'desactived' ? 'Réactiver' : 'Désactiver'}
                   </Button>
 
                   <Button

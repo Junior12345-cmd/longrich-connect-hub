@@ -37,7 +37,7 @@ const Boutiques: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        setShop(res.data || null);
+        setShop(res.data.shop || null);
         setStats(res.data.stats || []);
         setRecentOrders(res.data.recentOrders || []);
 
@@ -75,7 +75,7 @@ const Boutiques: React.FC = () => {
           <Link to={`/${shop.lien_shop}`}>
             <Button className="gradient-secondary">
               <Eye className="w-4 h-4 mr-2" />
-              Voir ma boutique
+              Voir ma boutique 
             </Button>
           </Link>
 

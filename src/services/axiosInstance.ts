@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-// Crée une instance Axios
+// Utiliser la variable d'environnement VITE_BACKEND_URL
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000', // change si ton backend est ailleurs
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
-  withCredentials: false, // pas besoin pour API stateless
+  withCredentials: false,
 });
 
 // Interceptor pour ajouter le token automatiquement
