@@ -23,12 +23,12 @@ const BoutiquesVitrine = () => {
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-8">
-          <Badge className="gradient-primary text-white px-4 py-1">
+          <Badge className="text-white px-4 py-1">
             🏪 SOLUTION E-COMMERCE INTÉGRÉE
           </Badge>
           
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-            <span className="gradient-primary bg-clip-text text-dark">
+            <span className="bg-clip-text text-dark">
               Créez votre boutique
             </span>
             <br />

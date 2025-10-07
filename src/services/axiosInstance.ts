@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Utiliser la variable d'environnement VITE_BACKEND_URL
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: import.meta.env.VITE_BACKEND_URL || 'https://darkturquoise-rhinoceros-749906.hostingersite.com',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

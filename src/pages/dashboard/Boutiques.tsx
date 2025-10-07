@@ -49,8 +49,6 @@ const Boutiques: React.FC = () => {
     fetchShopData();
   }, [shopId]);
 
-  // console.log(shop)
-
   if (!shop) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -83,6 +81,13 @@ const Boutiques: React.FC = () => {
             <Button className="gradient-secondary">
               <Eye className="w-4 h-4 mr-2" />
               Liste des boutiques
+            </Button>
+          </Link>
+
+          <Link to={`#`}>
+            <Button className="gradient-secondary">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Retirer un solde 
             </Button>
           </Link>
         </div>

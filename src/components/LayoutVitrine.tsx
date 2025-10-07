@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 const Layout: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const APP_NAME = import.meta.env.VITE_APP_NAME;
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -30,10 +31,10 @@ const Layout: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                    <span className="text-dark font-bold text-sm">L</span>
+                  <div className="w-8 h-8 gradient-secondary rounded-lg flex items-center justify-center">
+                    <span className="text-dark font-bold text-sm">G</span>
                   </div>
-                <span className="font-bold text-xl">MLM Community</span>
+                <span className="font-bold text-xl">Geant</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 La plateforme communautaire qui révolutionne le MLM en Afrique.
@@ -70,7 +71,7 @@ const Layout: React.FC = () => {
           
           <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-muted-foreground">
-              © 2024 MLM Community. Tous droits réservés.
+             &copy; {new Date().getFullYear()} {APP_NAME} — Tous droits réservés.
             </div>
             <div className="flex space-x-4 text-sm">
               <div className="text-muted-foreground hover:text-primary cursor-pointer">RGPD</div>

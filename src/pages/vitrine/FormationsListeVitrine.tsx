@@ -171,7 +171,7 @@ const FormationsListeVitrine = () => {
       <section className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold">
-            <span className="gradient-primary bg-clip-text text-dark">Formations entrepreneuriales</span>
+            <span className="bg-clip-text text-dark">Formations entrepreneuriales</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Apprenez les compétences de demain avec nos formations certifiantes et développez votre réussite MLM.

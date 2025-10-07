@@ -28,11 +28,11 @@ const LandingVitrine = () => {
           </Badge>
           
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-            <span className="gradient-primary bg-clip-text text-dark">
+            <span className="bg-clip-text text-dark">
               Révolutionnez votre Business MLM
             </span>
             <br />
-            avec la Technologie
+           <span style={{color:'#ffdb00'}}>avec la Technologie</span>
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -42,11 +42,11 @@ const LandingVitrine = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="gradient-primary text-lg px-8 py-4">
-              🚀 Rejoindre Maintenant
+              🚀 Rejoindre maintenant
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8 py-4">
-              🏪 Découvrir les Boutiques
+              🏪 Découvrir les boutiques
             </Button>
           </div>
           
@@ -73,77 +73,117 @@ const LandingVitrine = () => {
       </section>
 
       {/* Problem/Solution Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold">🎯 Vos Défis Quotidiens</h2>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>Trouver des stockistes proches de chez vous</span>
+      <section className="py-20 bg-gradient-to-b from-black to-gray-900 text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+            {/* Challenges Section */}
+            <div className="space-y-10 animate-slide-up">
+              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                <span className="bg-gradient-to-r from-[#0074fa] to-[#ffdb00] bg-clip-text text-transparent">
+                  Vos défis quotidiens
+                </span>
+                <span className="text-[#ffdb00] ml-2">🎯</span>
+              </h2>
+              <div className="space-y-5">
+                {[
+                  "Trouver des stockistes proches de chez vous",
+                  "Vendre efficacement en ligne",
+                  "Se former et développer son réseau",
+                  "Créer du contenu marketing professionnel"
+                ].map((challenge, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center space-x-4 opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="w-3 h-3 bg-[#ffdb00] rounded-full transform scale-0 animate-scale-in" style={{ animationDelay: `${index * 0.1}s` }}></div>
+                    <span className="text-base sm:text-lg text-gray-200 font-medium">{challenge}</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>Vendre efficacement en ligne</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>Se former et développer son réseau</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>Créer du contenu marketing professionnel</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
-            
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold">💡 Notre Solution Tout-en-Un</h2>
-                <div className="space-y-4">
-                  <Card className="gradient-card p-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent/80 from-accent to-accent/80 rounded-lg flex items-center justify-center">
-                        <Globe className="w-5 h-5 text-dark" />
+
+            {/* Solutions Section */}
+            <div className="space-y-10 animate-slide-up">
+              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                <span className="bg-gradient-to-r from-[#0074fa] to-[#ffdb00] bg-clip-text text-transparent">
+                  Notre solution tout-en-un
+                </span>
+                <span className="text-[#ffdb00] ml-2">💡</span>
+              </h2>
+              <div className="space-y-6">
+                {[
+                  {
+                    icon: Globe,
+                    title: "Recherche géolocalisée",
+                    description: "Trouvez produits et stockistes près de vous"
+                  },
+                  {
+                    icon: Store,
+                    title: "Boutique e-commerce",
+                    description: "Clé en main, prête en 5 minutes"
+                  },
+                  {
+                    icon: BookOpen,
+                    title: "Formations + lives",
+                    description: "Certifiantes et interactives"
+                  }
+                ].map((solution, index) => (
+                  <Card
+                    key={index}
+                    className="bg-gray-900/80 backdrop-blur-sm border-none p-5 hover:bg-gray-800/90 hover:shadow-[0_0_20px_rgba(0,116,250,0.3)] transition-all duration-300 transform hover:-translate-y-1 opacity-0 animate-fade-in"
+                    role="region"
+                    aria-label={solution.title}
+                    style={{ animationDelay: `${index * 0.15}s` }}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="w-14 h-14 bg-gradient-to-br from-[#0074fa] to-[#ffdb00] rounded-xl flex items-center justify-center transform transition-transform hover:scale-110">
+                        <solution.icon className="w-7 h-7 text-white" />
                       </div>
                       <div>
-                        <h4 className="font-semibold">Recherche Géolocalisée</h4>
-                        <p className="text-sm text-muted-foreground">Trouvez produits et stockistes près de vous</p>
+                        <h4 className="font-bold text-xl text-white">{solution.title}</h4>
+                        <p className="text-sm text-gray-300 mt-1">{solution.description}</p>
                       </div>
                     </div>
                   </Card>
-                  
-                  <Card className="gradient-card p-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent/80 rounded-lg flex items-center justify-center">
-                        <Store className="w-5 h-5 text-dark" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">Boutique E-commerce</h4>
-                        <p className="text-sm text-muted-foreground">Clé en main, prête en 5 minutes</p>
-                      </div>
-                    </div>
-                  </Card>
-                  
-                  <Card className="gradient-card p-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent/80 rounded-lg flex items-center justify-center">
-                        <BookOpen className="w-5 h-5 text-dark" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">Formations + Lives</h4>
-                        <p className="text-sm text-muted-foreground">Certifiantes et interactives</p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
+        <style>
+          {`
+            .animate-slide-up {
+              animation: slideUp 0.6s ease-out forwards;
+            }
+            @keyframes slideUp {
+              from { opacity: 0; transform: translateY(30px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+              animation: fadeIn 0.5s ease-in forwards;
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            .animate-scale-in {
+              animation: scaleIn 0.5s ease-in forwards;
+            }
+            @keyframes scaleIn {
+              from { transform: scale(0); }
+              to { transform: scale(1); }
+            }
+            .focus\\:ring-[#ffdb00]:focus {
+              outline: none;
+              ring: 2px solid #ffdb00;
+            }
+            [role="region"]:focus-within {
+              outline: 2px solid #ffdb00;
+              outline-offset: 2px;
+            }
+          `}
+        </style>
       </section>
 
       {/* Testimonials */}
@@ -227,24 +267,48 @@ const LandingVitrine = () => {
       </section>
 
       {/* CTA Final */}
-      <section className="py-20 gradient-primary">
-        <div className="container mx-auto px-4 text-center space-y-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark">
-            Prêt à Révolutionner votre Business MLM ?
+      <section className="py-20 bg-gradient-to-r from-[#0074fa] to-[#ffdb00] text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 animate-slide-up">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            <span className="bg-clip-text text-white">
+              Prêt à Révolutionner votre Business MLM ?
+            </span>
           </h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto text-dark">
-            Rejoignez plus de 10,000 entrepreneurs qui développent leur réseau 
-            avec nos outils innovants.
+          <p className="text-lg sm:text-xl text-gray-100 opacity-90 max-w-3xl mx-auto">
+            Rejoignez plus de 10,000 entrepreneurs qui développent leur réseau avec nos outils innovants.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
-              🚀 Commencer maintenant
+            <Button
+              size="lg"
+              className="text-lg px-8 py-4 bg-white text-[#0074fa] font-semibold rounded-xl hover:bg-[#ffdb00] hover:text-black transition-all duration-300 transform hover:scale-105"
+              aria-label="Commencer maintenant"
+            >
+              <span className="mr-2">🚀</span> Commencer maintenant
             </Button>
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-4 border-white hover:text-primary">
-              📱 Demander une démo
+            <Button
+              size="lg"
+              className="text-lg px-8 py-4 bg-white text-[#0074fa] font-semibold rounded-xl hover:bg-[#ffdb00] hover:text-black transition-all duration-300 transform hover:scale-105"
+              aria-label="Commencer maintenant"
+            >
+              <span className="mr-2">📱</span> Demander une démo
             </Button>
           </div>
         </div>
+        <style>
+          {`
+            .animate-slide-up {
+              animation: slideUp 0.6s ease-out forwards;
+            }
+            @keyframes slideUp {
+              from { opacity: 0; transform: translateY(30px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            .focus\\:ring-[#ffdb00]:focus {
+              outline: none;
+              ring: 2px solid #ffdb00;
+            }
+          `}
+        </style>
       </section>
     </div>
   );

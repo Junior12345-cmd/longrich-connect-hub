@@ -48,7 +48,9 @@ const SingleProductPage: React.FC = () => {
     adresse: "",
     pays: "",
     ville: "",
+    quantity: "",
   });
+
   const [validFields, setValidFields] = useState<{ [key: string]: boolean }>({});
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -123,150 +125,122 @@ const SingleProductPage: React.FC = () => {
     return /^pk_(test|live|sandbox)_[a-zA-Z0-9-]+$/.test(key);
   };
 
-  // Load FedaPay Checkout.js script with retry
-  const loadFedaPayScript = () => {
-    // Safely access environment variable with fallback
-    const publicKey =
-      typeof process !== "undefined" && process.env.REACT_APP_FEDAPAY_PUBLIC_KEY
-        ? process.env.REACT_APP_FEDAPAY_PUBLIC_KEY
-        : "pk_sandbox_Lr9b5YgP-r7Ckq3uNGzAb9Zm";
-
-    console.log("Using FedaPay public key:", publicKey.substring(0, 12) + "...");
-
-    if (typeof process === "undefined" || !process.env.REACT_APP_FEDAPAY_PUBLIC_KEY) {
-      console.warn(
-        "Environment variable REACT_APP_FEDAPAY_PUBLIC_KEY is not set or process is undefined. Using fallback key. Please configure .env file."
-      );
-    }
-
-    if (!validatePublicKey(publicKey)) {
-      console.error("Invalid FedaPay public key format:", publicKey);
-      setFedapayError("Clé API FedaPay invalide. Vérifiez votre clé dans le tableau de bord FedaPay ou contactez le support.");
-      setSubmitLoading(false);
-      return () => {};
+  // --- Utilitaire pour charger le script FedaPay ---
+const loadFedaPayScript = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector("#fedapay-script")) {
+      return resolve(); // script déjà chargé
     }
 
     const script = document.createElement("script");
+    script.id = "fedapay-script";
     script.src = "https://cdn.fedapay.com/checkout.js?v=1.1.7";
     script.async = true;
-    script.onload = () => {
-      console.log("FedaPay script loaded successfully");
-      setFedapayLoaded(true);
-      setFedapayError(null);
-      if (window.FedaPay) {
-        try {
-          // widgetRef.current = window.FedaPay.init({
-          //   public_key: publicKey,
-          //   onSuccess: (transaction: { id: string }) => {
-          //     console.log("FedaPay payment successful:", transaction);
-          //     setSubmitLoading(false);
-          //     navigate(`/confirmation/${transaction.id}`, {
-          //       state: {
-          //         status: "success",
-          //         transactionId: transaction.id,
-          //         amount: (product?.promotionalPrice || product?.price || fallbackProduct.price) * quantity,
-          //         productTitle: product?.title || fallbackProduct.title,
-          //         quantity,
-          //       },
-          //     });
-          //   },
-          //   onCancel: () => {
-          //     console.log("FedaPay payment cancelled");
-          //     setSubmitLoading(false);
-          //     navigate(`/confirmation/cancelled`, {
-          //       state: {
-          //         status: "cancelled",
-          //         message: "Paiement annulé par l'utilisateur.",
-          //       },
-          //     });
-          //   },
-          //   onError: (error: { message: string }) => {
-          //     console.error("FedaPay payment error:", error);
-          //     setSubmitLoading(false);
-          //     navigate(`/confirmation/error`, {
-          //       state: {
-          //         status: "error",
-          //         message: `Erreur lors du paiement: ${error.message}`,
-          //       },
-          //     });
-          //   },
-          // });
-          
-          widgetRef.current = window.FedaPay.init({
-            public_key: publicKey,
-            mode: "popup", // 👈 ou "inline"
-            onSuccess: (transaction: { id: string }) => {
-              console.log("Paiement réussi:", transaction);
-              setSubmitLoading(false);
-              navigate(`/confirmation/${transaction.id}`, {
-                state: {
-                  status: "success",
-                  transactionId: transaction.id,
-                  amount: (product?.promotionalPrice || product?.price || fallbackProduct.price) * quantity,
-                  productTitle: product?.title || fallbackProduct.title,
-                  quantity,
-                },
-              });
-            },
-            onCancel: () => {
-              console.log("Paiement annulé");
-              setSubmitLoading(false);
-              navigate(`/confirmation/cancelled`, {
-                state: { status: "cancelled", message: "Paiement annulé par l'utilisateur." },
-              });
-            },
-            onError: (error: { message: string }) => {
-              console.error("Erreur paiement:", error);
-              setSubmitLoading(false);
-              navigate(`/confirmation/error`, {
-                state: { status: "error", message: `Erreur lors du paiement: ${error.message}` },
-              });
-            },
-          });
-          
-          console.log("FedaPay widget initialized:", widgetRef.current);
-        } catch (err: any) {
-          console.error("FedaPay initialization error:", {
-            message: err.message,
-            stack: err.stack,
-            publicKey: publicKey.substring(0, 12) + "...",
-          });
-          setFedapayError("Erreur lors de l'initialisation du paiement. Vérifiez votre clé API ou contactez le support FedaPay.");
-          setSubmitLoading(false);
-        }
-      } else {
-        console.error("FedaPay object not available after script load");
-        setFedapayError("Objet FedaPay non disponible. Veuillez réessayer ou vérifier votre connexion.");
-        setSubmitLoading(false);
-      }
-    };
-    script.onerror = () => {
-      console.error(`Failed to load FedaPay script (Attempt ${retryCountRef.current + 1}/${maxRetries})`);
-      if (retryCountRef.current < maxRetries) {
-        retryCountRef.current += 1;
-        setTimeout(() => {
-          console.log(`Retrying FedaPay script load (Attempt ${retryCountRef.current + 1})`);
-          document.body.removeChild(script);
-          loadFedaPayScript();
-        }, 2000);
-      } else {
-        console.error("Max retries reached for loading FedaPay script");
-        setFedapayError("Impossible de charger le script de paiement après plusieurs tentatives. Vérifiez votre connexion réseau ou contactez le support FedaPay.");
-        setSubmitLoading(false);
-      }
-    };
-    document.body.appendChild(script);
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  };
 
-  useEffect(() => {
-    retryCountRef.current = 0;
-    return loadFedaPayScript();
-  }, [navigate, product, quantity]);
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Impossible de charger le script FedaPay"));
+
+    document.body.appendChild(script);
+  });
+};
+
+// --- Fonction pour initialiser et ouvrir le widget ---
+const openFedaPayWidget = async (orderId: string, amount: number) => {
+  try {
+    await loadFedaPayScript();
+
+    if (!(window as any).FedaPay) {
+      throw new Error("Objet FedaPay non disponible après le chargement du script");
+    }
+
+    // @ts-ignore
+    const widget: any = (window as any).FedaPay.init({
+      public_key: "pk_sandbox_Lr9b5YgP-r7Ckq3uNGzAb9Zm",
+      transaction: {
+        amount,
+        description: `Paiement de la commande #${orderId}`,
+      },
+      customer: {
+        firstname: deliveryDetails.prenom,
+        lastname: deliveryDetails.nom,
+        email: deliveryDetails.email || "client@example.com",
+        phone_number: deliveryDetails.phone,
+      },
+      onComplete: (result: any) => {
+        console.log("FedaPay result:", result);
+
+        if (result.reason === "CHECKOUT COMPLETE") {
+          // paiement réussi
+          window.location.href = `/confirmation/success?commande_id=${orderId}&transaction_id=${result.transaction.id}`;
+        } else {
+          // paiement annulé ou échec
+          window.location.href = `/confirmation/cancel?commande_id=${orderId}`;
+        }
+      },
+    });
+
+    widget.open();
+  } catch (err: any) {
+    console.error("Erreur lors de l'ouverture du widget FedaPay :", err.message);
+    setFedapayError(
+      "Erreur lors de l'initialisation du paiement. Vérifiez votre clé API ou contactez le support FedaPay."
+    );
+    setSubmitLoading(false);
+  }
+};
+
+
+// --- Fonction principale pour gérer le paiement ---
+const handleFedaPayCheckout = async () => {
+  // Validation côté client
+  const newErrors: { [key: string]: string[] } = {};
+  if (!deliveryDetails.nom) newErrors["customer.name"] = ["Le nom est requis"];
+  if (!deliveryDetails.prenom) newErrors["customer.firstname"] = ["Le prénom est requis"];
+  if (!deliveryDetails.phone) newErrors["customer.phone"] = ["Le numéro de téléphone est requis"];
+  else if (!/^\+?\d{9,}$/.test(deliveryDetails.phone))
+    newErrors["customer.phone"] = ["Numéro de téléphone invalide"];
+  if (!deliveryDetails.pays) newErrors["customer.country"] = ["Le pays est requis"];
+  if (!deliveryDetails.ville) newErrors["customer.city"] = ["La ville est requise"];
+  if (!deliveryDetails.adresse) newErrors["customer.address"] = ["L'adresse est requise"];
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  setSubmitLoading(true);
+
+  try {
+    // Création de la commande côté backend
+    const res = await axiosInstance.post("/api/commandes/create", {
+      customer: {
+        name: deliveryDetails.nom+deliveryDetails.prenom,
+        email: deliveryDetails.email,
+        phone: deliveryDetails.phone,
+        country: deliveryDetails.pays,
+        city: deliveryDetails.ville,
+        address: deliveryDetails.adresse,
+      },
+      product_id: product.id,
+      amount: product.price * quantity,
+      quantity: quantity,
+      status: "pending",
+    });
+
+    const orderId = res.data.commande.id;
+    const amount = res.data.commande.amount;
+
+    console.log("Commande créée :", res.data);
+    console.log("Commande créée :", orderId);
+
+    // Ouverture du widget FedaPay
+    await openFedaPayWidget(orderId, amount);
+  } catch (err: any) {
+    console.error("Erreur lors du paiement :", err.message);
+    setSubmitLoading(false);
+    setErrors({ general: ["Erreur lors de la création de la commande ou du paiement"] });
+  }
+};
 
   // Calculate promotion end date and time (3 days from now)
   const promotionEndDate = new Date();
@@ -345,58 +319,8 @@ const SingleProductPage: React.FC = () => {
       }));
     }
   };
-
-  const handleFedaPayCheckout = () => {
-    // Client-side validation
-    const newErrors: { [key: string]: string[] } = {};
-    if (!deliveryDetails.nom) newErrors["customer.name"] = ["Le nom est requis"];
-    if (!deliveryDetails.prenom) newErrors["customer.name"] = ["Le prénom est requis"];
-    if (!deliveryDetails.phone) newErrors["customer.phone"] = ["Le numéro de téléphone est requis"];
-    else if (!/^\+?\d{9,}$/.test(deliveryDetails.phone))
-      newErrors["customer.phone"] = ["Numéro de téléphone invalide"];
-    if (!deliveryDetails.pays) newErrors["customer.country"] = ["Le pays est requis"];
-    if (!deliveryDetails.ville) newErrors["customer.city"] = ["La ville est requise"];
-    if (!deliveryDetails.adresse) newErrors["customer.address"] = ["L'adresse est requise"];
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setSubmitLoading(false);
-      console.log("Validation errors:", newErrors);
-      return;
-    }
-
-    if (!fedapayLoaded || !window.FedaPay || !widgetRef.current) {
-      setErrors({ general: [fedapayError || "Le script de paiement n'est pas encore chargé. Veuillez réessayer ou vérifier votre connexion."] });
-      setSubmitLoading(false);
-      console.log("FedaPay script or widget not ready");
-      return;
-    }
-
-    setSubmitLoading(true);
-    try {
-      setTimeout(() => {
-        if (widgetRef.current) {
-          widgetRef.current.open();
-          console.log("FedaPay widget opened");
-        } else {
-          throw new Error("Widget not initialized");
-        }
-      }, 100);
-    } catch (err: any) {
-      console.error("FedaPay widget open error:", {
-        message: err.message,
-        stack: err.stack,
-      });
-      setSubmitLoading(false);
-      navigate(`/confirmation/error`, {
-        state: {
-          status: "error",
-          message: "Erreur lors de l'ouverture du widget de paiement. Veuillez réessayer.",
-        },
-      });
-    }
-  };
-
+  
+  const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white">
@@ -437,34 +361,30 @@ const SingleProductPage: React.FC = () => {
     <div className={`min-h-screen bg-gradient-to-b from-gray-50 to-white ${theme} font-sans`}>
       {/* Navigation Bar */}
       <nav className="sticky top-0 z-20 bg-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity" aria-label="Retour à l'accueil">
-            <img
-              src={product.shop?.logo || fallbackProduct.shop.logo}
-              alt={product.shop?.title || fallbackProduct.shop.title}
-              className="h-10 w-10 rounded-full object-cover"
-            />
-            <span className="text-xl font-bold text-gray-900">{product.shop?.title || fallbackProduct.shop.title}</span>
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <Link
+            to="#"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            aria-label="Retour à l'accueil"
+          >
+            <div className="w-full h-12 flex items-center justify-center">
+              <img
+                src={product.shop?.logo || "https://via.placeholder.com/48x48?text=Logo"}
+                alt={product.shop?.title_principal_shop || "Boutique"}
+                className="w-full h-full object-contain rounded-full"
+                onError={(e) => (e.currentTarget.src = "https://via.placeholder.com/48x48?text=Logo")}
+              />
+            </div>
           </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-teal-500 hover:underline underline-offset-4 transition-colors"
-            >
-              Accueil
-            </Link>
-            <Link
-              to="/boutiques"
-              className="text-gray-600 hover:text-teal-500 hover:underline underline-offset-4 transition-colors"
-            >
-              Boutiques
-            </Link>
-            <Link
-              to="/about"
-              className="text-gray-600 hover:text-teal-500 hover:underline underline-offset-4 transition-colors"
-            >
-              À propos
-            </Link>
+
+          <div className="hidden md:flex items-center justify-center flex-1 gap-8">
+          <Link
+  to={`${FRONTEND_URL}/${product.shop.lien_shop}`}
+  className="text-gray-600 hover:text-teal-500 hover:underline underline-offset-4 transition-colors"
+>
+  Produits
+</Link>
+
             <Link
               to="/contact"
               className="text-gray-600 hover:text-teal-500 hover:underline underline-offset-4 transition-colors"
@@ -480,9 +400,11 @@ const SingleProductPage: React.FC = () => {
               </Link>
             )}
           </div>
-          <div className="hidden md:block text-sm text-gray-500">
-            {product.shop?.adresse || fallbackProduct.shop.adresse}
+
+          <div className="hidden md:block text-sm text-gray-500 text-right max-w-52">
+            Adresse : {product.shop?.adresse || "123 Rue Commerce, Dakar, Sénégal"}
           </div>
+
           <Button
             variant="ghost"
             size="icon"
@@ -493,43 +415,24 @@ const SingleProductPage: React.FC = () => {
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
+
         {menuOpen && (
           <div className="md:hidden bg-white shadow-md py-4 animate-slide-in">
-            <div className="container mx-auto px-4 flex flex-col gap-4">
-              <Link
-                to="/"
-                className="text-gray-600 hover:text-teal-500"
-                onClick={() => setMenuOpen(false)}
-              >
+            <div className="container mx-auto px-4 flex flex-col gap-4 text-sm">
+              <Link to="/" className="text-gray-600 hover:text-teal-500" onClick={() => setMenuOpen(false)}>
                 Accueil
               </Link>
-              <Link
-                to="/boutiques"
-                className="text-gray-600 hover:text-teal-500"
-                onClick={() => setMenuOpen(false)}
-              >
-                Boutiques
+              <Link to="#" className="text-gray-600 hover:text-teal-500" onClick={() => setMenuOpen(false)}>
+                Produits
               </Link>
-              <Link
-                to="/about"
-                className="text-gray-600 hover:text-teal-500"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/about" className="text-gray-600 hover:text-teal-500" onClick={() => setMenuOpen(false)}>
                 À propos
               </Link>
-              <Link
-                to="/contact"
-                className="text-gray-600 hover:text-teal-500"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/contact" className="text-gray-600 hover:text-teal-500" onClick={() => setMenuOpen(false)}>
                 Contact
               </Link>
               {isAuthenticated && (
-                <Link
-                  to="/dashboard"
-                  className="text-gray-600 hover:text-teal-500"
-                  onClick={() => setMenuOpen(false)}
-                >
+                <Link to="/dashboard" className="text-gray-600 hover:text-teal-500" onClick={() => setMenuOpen(false)}>
                   Dashboard
                 </Link>
               )}
@@ -814,6 +717,71 @@ const SingleProductPage: React.FC = () => {
           {submitLoading ? "Chargement..." : "Payer maintenant"}
         </Button>
       </div>
+
+      <footer className="bg-gray-900 text-gray-300 py-10">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <div className="flex flex-col items-center md:items-start gap-3">
+              <img
+                src={product.shop?.logo || "https://via.placeholder.com/80x80?text=Logo"}
+                alt={product.shop?.title || "Boutique"}
+                className="w-16 h-16 object-contain rounded-full"
+              />
+              <h2 className="text-lg font-semibold text-white">{product.shop?.title || "Boutique"}</h2>
+              <p className="text-sm text-gray-400 text-center md:text-left">
+                {product.shop?.description || "Découvrez nos produits de qualité et nos meilleures offres."}
+              </p>
+            </div>
+
+            {/* 🔗 Liens utiles */}
+            <div className="flex flex-col items-center md:items-start">
+              <h4 className="text-lg font-semibold text-white">Liens utiles</h4>
+              <ul className="mt-3 space-y-2 text-sm">
+                <li>
+                  <Link to="#" className="hover:text-teal-400 transition-colors">Produits</Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="hover:text-teal-400 transition-colors">Contact</Link>
+                </li>
+                {isAuthenticated && (
+                  <li>
+                    <Link to="/dashboard" className="hover:text-teal-400 transition-colors">Dashboard</Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            {/* 📞 Contact */}
+            <div className="flex flex-col items-center md:items-start">
+              <h4 className="text-lg font-semibold text-white">Nous contacter</h4>
+              <p className="mt-3 text-sm">
+                Email :{" "}
+                <a
+                  href={`mailto:${product.shop?.mail || "support@example.com"}`}
+                  className="hover:text-teal-400 transition-colors"
+                >
+                  {product.shop?.mail || "support@example.com"}
+                </a>
+              </p>
+              <p className="mt-1 text-sm">
+                Téléphone :{" "}
+                <a
+                  href={`tel:${product.shop?.phone}`}
+                  className="hover:text-teal-400 transition-colors"
+                >
+                  {product.shop?.phone }
+                </a>
+              </p>
+            </div>
+
+          </div>
+
+          <div className="mt-10 border-t border-gray-700 pt-4 text-center text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} {product.shop?.title_principal_shop || product.shop?.title || "Boutique"} — Tous droits réservés.
+          </div>
+        </div>
+      </footer>
       <style>
         {`
           .animate-fade-in {

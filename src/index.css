@@ -89,11 +89,13 @@ All colors MUST be HSL.
 
   /* Utility classes for gradients */
   .gradient-primary {
-    background: var(--gradient-primary);
+    background: #0074fa!important;
+    /* background: var(--gradient-primary); */
   }
 
   .gradient-secondary {
-    background: var(--gradient-secondary);
+    /* background: var(--gradient-secondary); */
+    background: #ffdb00!important;
   }
 
   .gradient-accent {

@@ -36,10 +36,10 @@ const HeaderWithNavbar = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-            <span className="text-dark font-bold text-sm">L</span>
+          <div className="w-8 h-8 gradient-secondary rounded-lg flex items-center justify-center">
+            <span className="text-dark font-bold text-sm">G</span>
           </div>
-          <span className="font-bold text-xl">Longrich Community</span>
+          <span className="font-bold text-xl">Geant</span>
         </div>
 
         {/* Desktop Menu */}

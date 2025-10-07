@@ -162,7 +162,7 @@ const CatalogueVitrine = () => {
       <section className="py-12 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div className="container mx-auto px-4 text-center space-y-6">
           <h1 className="text-3xl md:text-5xl font-bold">
-            <span className="gradient-primary bg-clip-text text-primary">
+            <span className="bg-clip-text text-primary">
               Catalogue Produits
             </span>
             <br />
