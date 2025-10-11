@@ -36,7 +36,7 @@ const ConfirmationPage: React.FC = () => {
         Swal.fire({
           icon: "success",
           title: "Transaction vérifiée",
-          text: `Statut de la commande : ${response.data.transaction_status}`,
+          text: `Statut de la commande : Approuvé`,
           confirmButtonColor: "#3085d6",
         });
       } 
@@ -56,15 +56,17 @@ const ConfirmationPage: React.FC = () => {
       // Gérer le cas où la transaction existe déjà
       const status = error.response?.status;
       const message = error.response?.data?.message;
+      console.log(message)
       // Gérer toutes les autres erreurs
       Swal.fire({
         icon: "error",
         title: "Erreur de vérification",
         text: "Impossible de vérifier la transaction. Réessayez plus tard.",
         confirmButtonColor: "#d33",
-      }).then(() => {
-        navigate(-1);
       });
+      // .then(() => {
+      //   navigate(-1);
+      // });
 }
   };
   

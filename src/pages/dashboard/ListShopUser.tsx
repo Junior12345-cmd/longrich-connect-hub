@@ -60,7 +60,6 @@ const ListShopUser = () => {
           shop.id === id ? { ...shop, status: 'desactived' } : shop
         )
       );
-      console.log(res)
       toast.success('Boutique désactivée avec succès');
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Impossible de désactiver la boutique');
@@ -166,7 +165,6 @@ const ListShopUser = () => {
                         : 'Inactive'}
                     </Badge>
                   </div>
-                  <CardDescription>{shop.description}</CardDescription>
                 </div>
 
                 <div className="flex gap-2">
@@ -250,7 +248,7 @@ const ListShopUser = () => {
 
             <CardContent>
               <div className="text-sm">
-                <p>Solde: <span className="font-medium">{shop.solde} €</span></p>
+                <p>Solde: <span className="font-medium">{shop.solde} XOF</span></p>
               </div>
             </CardContent>
           </Card>

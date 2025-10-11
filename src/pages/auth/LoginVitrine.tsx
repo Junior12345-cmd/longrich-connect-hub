@@ -83,7 +83,7 @@ const LoginVitrine = () => {
           <div className="space-y-8 text-center lg:text-left">
             <div>
               <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-                <span className="gradient-primary bg-clip-text text-dark">Bon retour !</span>
+                <span className="bg-clip-text text-dark">Bon retour !</span>
               </h1>
               <p className="text-xl text-muted-foreground">
                 Connectez-vous à votre compte pour accéder à vos formations, 

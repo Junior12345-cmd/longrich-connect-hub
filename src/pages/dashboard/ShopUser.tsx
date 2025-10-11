@@ -75,11 +75,20 @@ const ShopPage = () => {
     fetchShop();
   }, [slug]);
 
+  function stripHtml(html) {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  }
+  
+  function truncateText(text, maxLength) {
+    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+  }
   // Si en cours de chargement
   if (loading) {
     return (
-      <div className="text-center py-20">
-        <p className="text-lg">⏳ Chargement de la boutique...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -130,7 +139,7 @@ const ShopPage = () => {
           >
             <div className="w-full h-12 flex items-center justify-center">
               <img
-                src={shop.logo || "https://via.placeholder.com/48x48?text=Logo"}
+                src={`${import.meta.env.VITE_BACKEND_URL}/${shop.logo}`}
                 alt={shop.title_principal_shop || "Boutique"}
                 className="w-full h-full object-contain rounded-full"
                 onError={(e) => (e.currentTarget.src = "https://via.placeholder.com/48x48?text=Logo")}
@@ -162,7 +171,7 @@ const ShopPage = () => {
           </div>
 
           <div className="hidden md:block text-sm text-gray-500 text-right max-w-52">
-            Adresse : {shop.adresse || "123 Rue Commerce, Dakar, Sénégal"}
+            Téléphone : {shop.phone || "N/A"} <br />
           </div>
 
           <Button
@@ -210,7 +219,7 @@ const ShopPage = () => {
             </Badge>
             
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              <span className="gradient-primary bg-clip-text text-dark">
+              <span className=" bg-clip-text text-dark">
                 {shop.title_principal_shop}
               </span>
             </h1>
@@ -343,15 +352,13 @@ const ShopPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
             <div className="flex flex-col items-center md:items-start gap-3">
-              <img
-                src={shop?.logo || "https://via.placeholder.com/80x80?text=Logo"}
-                alt={shop?.title || "Boutique"}
-                className="w-16 h-16 object-contain rounded-full"
-              />
               <h2 className="text-lg font-semibold text-white">{shop?.title || "Boutique"}</h2>
               <p className="text-sm text-gray-400 text-center md:text-left">
-                {shop?.description || "Découvrez nos produits de qualité et nos meilleures offres."}
+                {shop?.description
+                  ? truncateText(stripHtml(shop.description), 200) // 200 caractères max
+                  : "Découvrez nos produits de qualité et nos meilleures offres."}
               </p>
+
             </div>
 
             {/* 🔗 Liens utiles */}

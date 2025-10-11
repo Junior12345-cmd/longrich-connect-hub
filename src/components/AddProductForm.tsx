@@ -101,7 +101,9 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         },
       });
 
-      onProductAdded(res.data);
+      onProductAdded(res.data.product || res.data);
+
+      // Reset form
       setFormData({
         shop_id: formData.shop_id,
         title: "",
@@ -112,21 +114,16 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         images: [],
       });
       setOpen(false);
-      
-      // 🔄 Recharger la page après ajout
+
+      // Recharger la page pour afficher le nouveau produit
       window.location.reload();
-
     } catch (error: any) {
-      // console.log(error.response?.data); // Affiche les erreurs de validation
-
       if (error.response?.status === 422) {
-        // Erreurs de validation -> affichage sous les inputs
         setErrors(error.response.data.errors);
       } else {
-        // Erreur générale -> affichage en haut du formulaire
-        const message =
-          error.response?.data?.message || "Une erreur est survenue. Vérifiez vos données.";
-        setGeneralError(message);
+        setGeneralError(
+          error.response?.data?.message || "Une erreur est survenue. Vérifiez vos données."
+        );
       }
     } finally {
       setLoading(false);
@@ -136,7 +133,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gradient-secondary">
+        <Button className="gradient-primary">
           <Plus className="w-4 h-4 mr-2" />
           Ajouter un produit
         </Button>
@@ -217,7 +214,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, quantity: e.target.value })
                     }
-                     placeholder="Entrez une quantité"
+                    placeholder="Entrez une quantité"
                     required
                   />
                   {errors.quantity && (
@@ -293,9 +290,17 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
                   />
                 </label>
               </div>
-              {errors.images && (
-                <p className="text-red-500 text-sm">{errors.images[0]}</p>
-              )}
+
+              {/* Affichage des erreurs pour toutes les images */}
+              {Object.keys(errors)
+                .filter((key) => key.startsWith("images"))
+                .map((key) =>
+                  errors[key].map((errMsg, i) => (
+                    <p key={key + i} className="text-red-500 text-sm mt-1">
+                      {errMsg}
+                    </p>
+                  ))
+                )}
             </CardContent>
           </Card>
 

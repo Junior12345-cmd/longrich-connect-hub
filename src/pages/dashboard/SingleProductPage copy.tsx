@@ -61,26 +61,26 @@ const SingleProductPage: React.FC = () => {
   const maxRetries = 3;
 
   // Fictitious product data (fallback)
-  // const fallbackProduct = {
-  //   id: productId,
-  //   title: "Formation Premium en Monétisation",
-  //   description:
-  //     "Maîtrisez les stratégies avancées pour monétiser votre chaîne YouTube et générer des revenus passifs. Ce cours complet couvre le SEO, la création de contenu engageant et les techniques de marketing numérique.",
-  //   price: 150000,
-  //   promotionalPrice: 99000,
-  //   quantity: 50,
-  //   images: [
-  //     "https://via.placeholder.com/600x400?text=Formation+Image+1",
-  //     "https://via.placeholder.com/600x400?text=Formation+Image+2",
-  //     "https://via.placeholder.com/600x400?text=Formation+Image+3",
-  //   ],
-  //   image: "https://via.placeholder.com/600x400?text=Formation+Image+1",
-  //   shop: {
-  //     title: "MonBoutique",
-  //     logo: "https://via.placeholder.com/40x40?text=Logo",
-  //     adresse: "123 Rue Commerce, Dakar, Sénégal",
-  //   },
-  // };
+  const fallbackProduct = {
+    id: productId,
+    title: "Formation Premium en Monétisation",
+    description:
+      "Maîtrisez les stratégies avancées pour monétiser votre chaîne YouTube et générer des revenus passifs. Ce cours complet couvre le SEO, la création de contenu engageant et les techniques de marketing numérique.",
+    price: 150000,
+    promotionalPrice: 99000,
+    quantity: 50,
+    images: [
+      "https://via.placeholder.com/600x400?text=Formation+Image+1",
+      "https://via.placeholder.com/600x400?text=Formation+Image+2",
+      "https://via.placeholder.com/600x400?text=Formation+Image+3",
+    ],
+    image: "https://via.placeholder.com/600x400?text=Formation+Image+1",
+    shop: {
+      title: "MonBoutique",
+      logo: "https://via.placeholder.com/40x40?text=Logo",
+      adresse: "123 Rue Commerce, Dakar, Sénégal",
+    },
+  };
 
   const citiesByCountry: { [key: string]: string[] } = {
     Senegal: ["Dakar", "Thiès", "Saint-Louis"],
@@ -107,11 +107,11 @@ const SingleProductPage: React.FC = () => {
           }
         }
         setProduct(res.data);
-        setMainImage(res.data.image || res.data.images?.[0]);
+        setMainImage(res.data.image || res.data.images?.[0] || fallbackProduct.image);
       } catch (err) {
         console.error("Erreur lors du chargement du produit:", err);
-        // setProduct(fallbackProduct);
-        // setMainImage(fallbackProduct.image);
+        setProduct(fallbackProduct);
+        setMainImage(fallbackProduct.image);
         setError("Impossible de charger le produit. Affichage des données par défaut.");
       } finally {
         setLoading(false);
@@ -160,12 +160,12 @@ const openFedaPayWidget = async (orderId: string, amount: number) => {
         amount,
         description: `Paiement de la commande #${orderId}`,
       },
-      // customer: {
-      //   firstname: deliveryDetails.prenom,
-      //   lastname: deliveryDetails.nom,
-      //   email: deliveryDetails.email || "client@example.com",
-      //   phone_number: deliveryDetails.phone,
-      // },
+      customer: {
+        firstname: deliveryDetails.prenom,
+        lastname: deliveryDetails.nom,
+        email: deliveryDetails.email || "client@example.com",
+        phone_number: deliveryDetails.phone,
+      },
       onComplete: (result: any) => {
         console.log("FedaPay result:", result);
 
@@ -190,7 +190,6 @@ const openFedaPayWidget = async (orderId: string, amount: number) => {
 };
 
 
-
 // --- Fonction principale pour gérer le paiement ---
 const handleFedaPayCheckout = async () => {
   // Validation côté client
@@ -213,9 +212,6 @@ const handleFedaPayCheckout = async () => {
 
   try {
     // Création de la commande côté backend
-    await axiosInstance.get("/sanctum/csrf-cookie"); // pour Sanctum
-    // console.log(product.price * quantity)
-
     const res = await axiosInstance.post("/api/commandes/create", {
       customer: {
         name: deliveryDetails.nom+deliveryDetails.prenom,
@@ -226,31 +222,24 @@ const handleFedaPayCheckout = async () => {
         address: deliveryDetails.adresse,
       },
       product_id: product.id,
-      amount: Number(product?.price || 0) * Number(quantity || 1),
+      amount: product.price * quantity,
       quantity: quantity,
       status: "pending",
     });
+
     const orderId = res.data.commande.id;
     const amount = res.data.commande.amount;
 
-    // console.log("Commande créée :", res);
-    // console.log("Commande créée :", orderId);
+    console.log("Commande créée :", res.data);
+    console.log("Commande créée :", orderId);
 
     // Ouverture du widget FedaPay
     await openFedaPayWidget(orderId, amount);
-  }catch (err: any) {
-      console.error("Erreur lors du paiement :", err.message);
-      setSubmitLoading(false);
-    
-      if (err.response?.data?.errors) {
-        // Exemple : { 'customer.name': ['Le nom est requis'], 'amount': ['Le montant est invalide'] }
-        setErrors(err.response.data.errors);
-      } else if (err.response?.data?.message) {
-        setErrors({ general: [err.response.data.message] });
-      } else {
-        setErrors({ general: ["Erreur lors de la création de la commande ou du paiement"] });
-      }
-    }
+  } catch (err: any) {
+    console.error("Erreur lors du paiement :", err.message);
+    setSubmitLoading(false);
+    setErrors({ general: ["Erreur lors de la création de la commande ou du paiement"] });
+  }
 };
 
   // Calculate promotion end date and time (3 days from now)
@@ -291,7 +280,7 @@ const handleFedaPayCheckout = async () => {
   }, [quantity]);
 
   const handleQuantityChange = (value: number) => {
-    const stock = product?.quantity;
+    const stock = product?.quantity ?? fallbackProduct.quantity;
     const parsedValue = parseInt(value.toString(), 10);
     const newValue = isNaN(parsedValue) ? 1 : Math.max(1, Math.min(stock, parsedValue));
     setQuantity(newValue);
@@ -465,7 +454,7 @@ const handleFedaPayCheckout = async () => {
         <div className="w-full md:w-1/2 animate-fade-in">
           <div className="relative rounded-xl overflow-hidden shadow-lg">
             <img
-              src={mainImage || product.image }
+              src={mainImage || product.image || fallbackProduct.image}
               alt={`${product.title} main`}
               className="w-full h-[500px] object-cover transition-transform duration-300 hover:scale-105"
             />
@@ -491,21 +480,21 @@ const handleFedaPayCheckout = async () => {
             <p className="text-lg text-gray-600 mt-3 leading-relaxed">{product.description}</p>
             <div className="mt-4 flex items-center gap-4">
               <span className="text-2xl font-bold text-teal-600">
-                {((product.price) * quantity).toFixed(2)} XOF
+                {((product.promotionalPrice || product.price) * quantity).toFixed(2)} XOF
               </span>
-              {/* {product.price && (
+              {product.promotionalPrice && product.price && (
                 <span className="text-lg text-gray-500 line-through">
                   {(product.price * quantity).toFixed(2)} XOF
                 </span>
-              )} */}
+              )}
             </div>
-            {/* {(
+            {product.promotionalPrice && (
               <div className="mt-2 flex items-center gap-2">
                 <p className="text-sm text-red-500">
                   Offre valable jusqu'au {formattedEndDate} ({timeLeft})
                 </p>
               </div>
-            )} */}
+            )}
             <div className="mt-4 flex items-center gap-2">
               <Label className="text-sm font-medium">Quantité</Label>
               <div className="flex items-center gap-2">
@@ -531,7 +520,7 @@ const handleFedaPayCheckout = async () => {
                   variant="outline"
                   size="icon"
                   onClick={() => handleQuantityChange(quantity + 1)}
-                  disabled={quantity >= (product?.quantity)}
+                  disabled={quantity >= (product?.quantity ?? fallbackProduct.quantity)}
                   className="rounded-lg"
                   aria-label="Augmenter la quantité"
                 >
@@ -701,8 +690,8 @@ const handleFedaPayCheckout = async () => {
               className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-lg py-3 rounded-lg"
               onClick={handleFedaPayCheckout}
               disabled={submitLoading}
-              data-transaction-amount={(product?.price) * quantity}
-              data-transaction-description={`Achat de ${product?.title} (Quantité: ${quantity})`}
+              data-transaction-amount={(product?.promotionalPrice || product?.price || fallbackProduct.price) * quantity}
+              data-transaction-description={`Achat de ${product?.title || fallbackProduct.title} (Quantité: ${quantity})`}
               data-customer-email={deliveryDetails.email || ""}
               data-customer-lastname={`${deliveryDetails.nom} ${deliveryDetails.prenom}`}
               data-customer-phone={deliveryDetails.phone}
@@ -722,13 +711,13 @@ const handleFedaPayCheckout = async () => {
         </div>
       </main>
 
-      {/* <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg md:hidden z-10">
+      <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg md:hidden z-10">
         <Button
           className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-lg py-3 rounded-lg"
           onClick={handleFedaPayCheckout}
           disabled={submitLoading}
-          data-transaction-amount={product?.price * quantity}
-          data-transaction-description={`Achat de ${product?.title} (Quantité: ${quantity})`}
+          data-transaction-amount={(product?.promotionalPrice || product?.price || fallbackProduct.price) * quantity}
+          data-transaction-description={`Achat de ${product?.title || fallbackProduct.title} (Quantité: ${quantity})`}
           data-customer-email={deliveryDetails.email || ""}
           data-customer-lastname={`${deliveryDetails.nom} ${deliveryDetails.prenom}`}
           data-customer-phone={deliveryDetails.phone}
@@ -737,7 +726,7 @@ const handleFedaPayCheckout = async () => {
           <ShoppingCart className="mr-2" />
           {submitLoading ? "Chargement..." : "Payer maintenant"}
         </Button>
-      </div> */}
+      </div>
 
       <footer className="bg-gray-900 text-gray-300 py-10">
         <div className="container mx-auto px-4">

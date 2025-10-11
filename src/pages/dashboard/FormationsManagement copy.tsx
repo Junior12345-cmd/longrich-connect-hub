@@ -152,7 +152,7 @@ const FormationsManagement = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-clip-text">
             Gestion des Formations
           </h1>
           <p className="text-muted-foreground">

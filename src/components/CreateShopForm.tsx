@@ -11,6 +11,8 @@ import { ShopTemplateSelector } from './ShopTemplateSelector';
 import { Plus, Store, Upload, CreditCard, Truck } from 'lucide-react';
 import axiosInstance from '@/services/axiosInstance';
 import { toast } from 'sonner';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 interface CreateShopFormProps {
   onShopCreated: (shop: any) => void;
@@ -32,6 +34,7 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
   });
 
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [loading, setLoading] = useState(false);
 
   const categories = [
     'Mode & Beauté', 'Électronique', 'Maison & Jardin', 'Sports & Loisirs',
@@ -40,7 +43,8 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+    setLoading(true);
+
     try {
       await axiosInstance.get('/sanctum/csrf-cookie');
       const token = localStorage.getItem('auth_token');
@@ -63,18 +67,25 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
   
       // récupération du lien du logo
       const shopWithLogoUrl = response.data;
-      console.log('Logo URL:', shopWithLogoUrl.logo_url);
+      // console.log('Logo URL:', shopWithLogoUrl.logo_url);
   
       onShopCreated(shopWithLogoUrl);
       setOpen(false);
       setErrors({});
       setFormData({ title: '', description: '', address: '', email: '', phone: '', category: '', paymentOnDelivery: false, salesTax: false, template: '', logo: null });
+      
+      setTimeout(() => {
+        window.location.reload();
+
+      }, 1000); 
     } catch (err: any) {
       if (err.response?.status === 422) {
         setErrors(err.response.data.errors);
       } else {
         toast.error(err.response?.data?.message || 'Erreur lors de la création de la boutique');
       }
+    }finally {
+      setLoading(false);
     }
   };
   
@@ -92,7 +103,7 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
         </div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-[90vw] p-4 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Store className="w-5 h-5" />
@@ -122,16 +133,17 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
 
                 <div>
                   <Label htmlFor="description">Description</Label>
-                  <Textarea
+                  <ReactQuill
                     id="description"
+                    theme="snow"
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(value) => setFormData({ ...formData, description: value })}
                     placeholder="Décrivez votre boutique..."
-                    rows={3}
                   />
-                  {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description[0]}</p>}
+                  {errors.description && (
+                    <p className="text-red-500 text-sm mt-1">{errors.description[0]}</p>
+                  )}
                 </div>
-
                 <div>
                   <Label htmlFor="category">Catégorie *</Label>
                   <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
@@ -253,9 +265,46 @@ export const CreateShopForm: React.FC<CreateShopFormProps> = ({ onShopCreated })
           </div>
 
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>Annuler</Button>
-            <Button type="submit" className="gradient-primary">Créer la boutique</Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={loading}
+            >
+              Annuler
+            </Button>
+
+            <Button
+              type="submit"
+              className="gradient-primary flex items-center gap-2"
+              disabled={loading}
+            >
+              {loading && (
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              {loading ? "Création..." : "Créer la boutique"}
+            </Button>
           </div>
+
         </form>
       </DialogContent>
     </Dialog>

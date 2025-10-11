@@ -155,7 +155,7 @@ const RegisterVitrine = () => {
           <div className="space-y-8">
             <div className="text-center lg:text-left">
               <h1 className="text-4xl font-bold mb-4">
-                <span className="gradient-primary bg-clip-text text-dark">Créez votre compte gratuit</span>
+                <span className="bg-clip-text text-dark">Créez votre compte gratuit</span>
               </h1>
               <p className="text-xl text-muted-foreground">
                 Rejoignez la plus grande communauté MLM d'Afrique et commencez votre parcours vers le succès.

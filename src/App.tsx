@@ -8,8 +8,8 @@ import LayoutVitrine from "./components/LayoutVitrine";
 import Index from "./pages/dashboard/Index";
 import Search from "./pages/dashboard/Search";
 import Boutiques from "./pages/dashboard/Boutiques";
-import Formations from "./pages/dashboard/Formations";
-import FormationsManagement from "./pages/dashboard/FormationsManagement";
+import Formations from "./pages/dashboard/formations/Formations";
+import FormationsManagement from "./pages/dashboard/formations/FormationsManagement";
 import FormationPlayer from "./pages/dashboard/FormationPlayer";
 import LivesManagement from "./pages/dashboard/LivesManagement";
 import PacksManagement from "./pages/dashboard/PacksManagement";
@@ -41,6 +41,7 @@ import ShopPublic from "./pages/dashboard/ShopPublic";
 import { EditProductPage } from "./pages/dashboard/EditProductPage";
 import EditPackForm from "./pages/dashboard/EditPackForm";
 import ConfirmationPage from "./pages/dashboard/ConfirmationPage";
+import FormationEdit from "./pages/dashboard/formations/FormationEdit";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/dash/import-products" element={<ImportProducts />} />
             <Route path="/dash/formations" element={<Formations />} />
             <Route path="/dash/formations-management" element={<FormationsManagement />} />
+            <Route path="/dash/formations/edit/:id" element={<FormationEdit />} />
             <Route path="/dash/formation-player/:id" element={<FormationPlayer />} />
             <Route path="/dash/lives" element={<LivesManagement />} />
 

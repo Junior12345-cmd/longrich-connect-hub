@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
-  withCredentials: false,
+  withCredentials: true,
 });
 
 // Interceptor pour ajouter le token automatiquement
